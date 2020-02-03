@@ -16,7 +16,7 @@ const Map = (props) => {
     /* useEffect takes two arguments. First argument is a callback function which will run
     whenever any of the elements within the second argument (array/list of dependencies) change.
     If the second argument is empty or we don't provide it, then the callback function will run ONCE!
-    Similar to ngOnChanges within Angular, if any of the props/input change, the callback function
+    Similar to ngOnChanges within Angular, if any of the dependecies change, the callback function
     is called. React does not track these dependencies behind the scenes. Instead, useEffect()
     re-evaluates the dependency values whenever the component in which you use useEffect() is re-evaluated
     (i.e. whenever the component's props or state changed). If the component is re-evaluated and the dependencies
