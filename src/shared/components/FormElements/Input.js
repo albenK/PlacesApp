@@ -1,50 +1,42 @@
-import React, { useReducer }from 'react';
+import React  from 'react';
 
 import './Input.css';
 
-// Action Types
-const INPUT_CHANGE = 'INPUT_CHANGE';
-
-const inputReducer = (state, action) => {
-    switch (action.type) {
-        case INPUT_CHANGE:
-            return {
-                ...state,
-                value: action.value,
-                isValid: true
-            };
-        default:
-            return state;
-    }
-};
-
-
-// Input Component
 const Input = (props) => {
-    const [inputState, dispatch] = useReducer(inputReducer, {value: '', isValid: false});
+    const {
+        element,
+        id,
+        type, 
+        name, 
+        value,
+        label,
+        placeholder, 
+        handleChange,
+        handleBlur,
+        isValid,
+        isTouched,
+        errorMessage 
+    } = props;
 
-    const changeHandler = (event) => {
-        console.log('change handler is running');
-        dispatch({type: INPUT_CHANGE, value: event.target.value});
-    };
-
-    const element = props.element === 'input' ? (
+    const elementToRender = element === 'input' ? (
         <input 
-            id={props.id}
-            type={props.type}
-            placeholder={props.placeholder}
-            onChange={changeHandler}
-            value={inputState.value}
+            id={id}
+            type={type}
+            name={name}
+            placeholder={placeholder}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={value}
         />
     ) : (
-        <textarea id={props.id} rows={props.rows || 3} onChange={changeHandler} value={inputState.value}/>
+        <textarea id={id} rows={props.rows || 3} name={name} onChange={handleChange} onBlur={handleBlur} value={value}/>
     );
 
     return (
-        <div className={`form-control ${!inputState.isValid && 'form-control--invalid'}`}>
-            <label htmlFor={props.id}>{props.label}</label>
-            {element}
-            {!inputState.isValid && <p>{props.errorText}</p>}
+        <div className={`form-control ${!isValid && 'form-control--invalid'}`}>
+            <label htmlFor={id}>{label}</label>
+            {elementToRender}
+            {!isValid && errorMessage && <p>{errorMessage}</p>}
         </div>
     );
 };
