@@ -3,7 +3,7 @@ import React  from 'react';
 import './Input.css';
 
 const Input = (props) => {
-    const {
+    let {
         element,
         id,
         type, 
@@ -33,10 +33,10 @@ const Input = (props) => {
     );
 
     return (
-        <div className={`form-control ${!isValid && 'form-control--invalid'}`}>
+        <div className={`form-control ${!isValid && isTouched && 'form-control--invalid'}`}>
             <label htmlFor={id}>{label}</label>
             {elementToRender}
-            {!isValid && errorMessage && <p>{errorMessage}</p>}
+            {!isValid && isTouched && errorMessage && <p>{errorMessage}</p>}
         </div>
     );
 };

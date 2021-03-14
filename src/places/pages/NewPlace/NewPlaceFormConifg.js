@@ -1,9 +1,11 @@
+import React from 'react';
+
 import Input from "../../../shared/components/FormElements/Input";
 
-import { requiredRule } from "../../../shared/utils/validators";
+import { minLengthRule, requiredRule } from "../../../shared/utils/validators";
 
 // object representation of NewPlace form
-export const NewPlaceFormConfig = {
+export const New_Place_Form_Config = {
     title: {
         renderControl: (formControl, handleChange, handleBlur, key) => {
             /* arg formControl represents this control object itself,
@@ -12,7 +14,7 @@ export const NewPlaceFormConfig = {
                 arg handleBlur represents the onBlur event handler.
                 arg key represents the key to use when iterating over this forms controls.
 
-                This function will be called by our custom Form Hook.
+                This function will be called by our custom useForm Hook.
 
                 This function will return the JSX code we want to render.
             */
@@ -36,7 +38,30 @@ export const NewPlaceFormConfig = {
         isTouched: false,
         errorMessage: '',
         validationRules: [
-            requiredRule('title')
+            requiredRule('Title')
+        ]
+    },
+    description: {
+        renderControl: (formControl, handleChange, handleBlur, key) => {
+            return (
+                <Input
+                    key={key}
+                    element="textarea"
+                    {...formControl}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                />
+            );
+        },
+        id: 'description',
+        name: 'description',
+        label: 'Description',
+        value: '',
+        isValid: false,
+        isTouched: false,
+        errorMessage: '',
+        validationRules: [
+            minLengthRule('Description', 5)
         ]
     }
 };
