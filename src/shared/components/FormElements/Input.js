@@ -3,7 +3,7 @@ import React  from 'react';
 import './Input.css';
 
 const Input = (props) => {
-    let {
+    const {
         element,
         id,
         type, 
