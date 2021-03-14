@@ -1,5 +1,7 @@
 import Input from "../../../shared/components/FormElements/Input";
 
+import { requiredRule } from "../../../shared/utils/validators";
+
 // object representation of NewPlace form
 export const NewPlaceFormConfig = {
     title: {
@@ -33,11 +35,8 @@ export const NewPlaceFormConfig = {
         isValid: false,
         isTouched: false,
         errorMessage: '',
-        // TODO: Need to work on validators array.
         validationRules: [
-            /* 
-            
-            */
+            requiredRule('title')
         ]
     }
 };
