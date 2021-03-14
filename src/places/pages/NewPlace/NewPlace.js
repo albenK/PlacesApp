@@ -4,7 +4,7 @@ import Button from '../../../shared/components/FormElements/Button';
 import useForm from '../../../shared/utils/useForm';
 
 import './NewPlace.css';
-import { New_Place_Form_Config } from './NewPlaceFormConifg';
+import { New_Place_Form_Config } from './NewPlaceFormConfig';
 
 const NewPlace = () => {
     const { renderFormControls, isFormValid } = useForm(New_Place_Form_Config);
