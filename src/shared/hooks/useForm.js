@@ -3,15 +3,17 @@ import { useCallback, useState } from "react";
 const useForm = (formObject) => {
     const [form, setForm] = useState(formObject);
 
+    /**
+    This method will set the error message for the formControl and return a boolean
+    indicating whether or not this formControl is valid.
+     */
     const getValidityOfFormControl = useCallback((formControl) => {
-        // This method will set the error message for the formControl and return a boolean
-        // indicating whether or not this formControl is valid.
         let isValid = true;
         const validationRules = formControl.validationRules || [];
         for (let i = 0; i < validationRules.length; i++) {
             const validationRule = validationRules[i];
             const valid = validationRule.validate(formControl.value, form);
-            // if this validation rule has failed, then set the error message and break out of loop
+            // if this validation rule has failed, set the error message and break out of loop
             if (!valid) {
                 isValid = false;
                 formControl.errorMessage = validationRule.errorMessage;
@@ -102,7 +104,24 @@ const useForm = (formObject) => {
         return isValid;
     }, [form]);
 
-    return { renderFormControls, isFormValid };
+    /**
+     returns the values of the form. Each key in this object represents
+     the name of the FormControl. The value for the key will be an object
+     that has an isValid property and a value property.
+     */
+    const getFormValues = useCallback(() => {
+        const values = {};
+        const formControlNames = Object.keys(form);
+        for (let i = 0; i < formControlNames.length; i++) {
+            const name = formControlNames[i];
+            values[name] = {};
+            values[name]['isValid'] = form[name]['isValid'];
+            values[name]['value'] = form[name]['value'];
+        }
+        return values;
+    }, [form]);
+
+    return { getFormValues, renderFormControls, isFormValid };
 };
 
 export default  useForm;

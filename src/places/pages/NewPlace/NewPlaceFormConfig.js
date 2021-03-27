@@ -63,5 +63,28 @@ export const New_Place_Form_Config = {
         validationRules: [
             minLengthRule('Description', 5)
         ]
+    },
+    address: {
+        renderControl: (formControl, handleChange, handleBlur, key) => {
+            return (
+                <Input
+                    key={key}
+                    element="input"
+                    {...formControl}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                />
+            );
+        },
+        id: 'address',
+        name: 'address',
+        label: 'Address',
+        value: '',
+        isValid: false,
+        isTouched: false,
+        errorMessage: '',
+        validationRules: [
+            requiredRule('Address')
+        ]
     }
 };
