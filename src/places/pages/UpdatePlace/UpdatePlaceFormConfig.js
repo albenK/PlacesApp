@@ -2,7 +2,7 @@ import React from 'react';
 import Input from '../../../shared/components/FormElements/Input'
 import { requiredRule, minLengthRule } from '../../../shared/utils/validators';
 
-// object representation of update place form config
+// object representation of update place form.
 export const UPDATE_PLACE_FORM_CONFIG = {
     title: {
         renderControl: (formControl, handleChange, handleBlur, key) => {
