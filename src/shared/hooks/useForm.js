@@ -95,8 +95,11 @@ const useForm = (formObject) => {
      @param {Array<any>} controlsToUpdate - An array of objects representing the controls to update.
      For example: [{name: 'title', propsToUpdate: {value: 'New value', isTouched: true}}, { name: 'description', propsToUpdate: {value: 'Some value', isValid: true}}]
      will update the value and isTouched for title and update value and isValid for description.
+     @param {boolean} shouldRunValidationRules - A boolean flag to indicate whether the validation rules
+     should be run. Default value is false.
      */
-    const updateControls = useCallback((controlsToUpdate) => {
+    const updateControls = useCallback((controlsToUpdate, shouldRunValidationRules = false) => {
+        console.log('calling updateControls');
         if (!controlsToUpdate || !Array.isArray(controlsToUpdate)) {
             throw new Error(`arg ${controlsToUpdate} is not a supported argument`);
         }
@@ -119,11 +122,26 @@ const useForm = (formObject) => {
                 }
                 const newValue = propsToUpdate[property];
                 formControl[property] = newValue; // update the property with the new value
+                // run the validation rules if necessary.
+                /* TODO: Maybe extract this logic into another function since we're using this
+                within onControlChange, onBlurChange and now here.*/
+                if (shouldRunValidationRules) {
+                    // Set the error message and get whether this form control is valid or not.
+                    const isInputValid = getValidityOfFormControl(formControl);
+                    // If the formControl is valid and it was previously invalid.
+                    if (isInputValid && !formControl.isValid) {
+                        formControl.isValid = true;
+                    }
+                    else if (!isInputValid && formControl.isValid) {
+                        // If the formControl is invalid and it was previously valid.
+                        formControl.isValid = false;
+                    }
+                }
             }
         }
-
-        setForm({ ...form, ...newForm });
-    }, [form]);
+        console.log('newForm is ', newForm);
+        setForm({ ...newForm });
+    }, [form, getValidityOfFormControl]);
 
     /**
      returns a boolean value indicating whether overall form is valid.

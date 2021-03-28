@@ -30,10 +30,14 @@ const UpdatePlace = () => {
         // update the values of title and description form controls to prefill them
         updateControls(
             [
-                {name: 'title', propsToUpdate: { value: place.title || ''} },
-                {name: 'description', propsToUpdate: { value: place.description || ''} }
-            ]
+                { name: 'title', propsToUpdate: { value: place.title || '' } },
+                { name: 'description', propsToUpdate: { value: place.description || ''} }
+            ],
+            true
         );
+        /* This eslint rule is needed to hide a warning about adding updateControls as a
+        dependency for this useEffect Hook. */
+        // eslint-disable-next-line
     }, [place])
 
 
@@ -63,7 +67,7 @@ const UpdatePlace = () => {
     return (
         <form className="update-place-form">
             {renderFormControls()}
-            <Button type="submit" disabled={!isFormValid()} onClick={updatePlace}>UPDATE</Button>
+            <Button type="submit" disabled={!isFormValid()} onClick={updatePlace}>UPDATE PLACE</Button>
         </form>
     );
 };
