@@ -75,6 +75,10 @@ const useForm = (formObject) => {
         setForm({ ...form, [name]: formControl });
     }, [form, getValidityOfFormControl]);
 
+    /**
+     returns an array of JSX elements we want to render within our form.
+     This will use the JSX element we return within the renderControl() method of the FormConfig object.
+     */
     const renderFormControls = () => {
         const formControls = Object.values(form);
         const jsxElements = formControls.map((control) => {
@@ -85,6 +89,41 @@ const useForm = (formObject) => {
         });
         return jsxElements;
     };
+
+    /**
+     Updates the value of properties on form controls.
+     @param {Array<any>} controlsToUpdate - An array of objects representing the controls to update.
+     For example: [{name: 'title', propsToUpdate: {value: 'New value', isTouched: true}}, { name: 'description', propsToUpdate: {value: 'Some value', isValid: true}}]
+     will update the value and isTouched for title and update value and isValid for description.
+     */
+    const updateControls = useCallback((controlsToUpdate) => {
+        if (!controlsToUpdate || !Array.isArray(controlsToUpdate)) {
+            throw new Error(`arg ${controlsToUpdate} is not a supported argument`);
+        }
+        const newForm = { ...form };
+
+        for (let i = 0; i < controlsToUpdate.length; i++) {
+            const updateControlObj = controlsToUpdate[i]; // { name: string, propsToUpdate: {...} }
+            if (!newForm[updateControlObj.name]) { // safety check
+                throw new Error(`The ${updateControlObj.name} FormControl wasn't found in the form.`);
+            }
+            const propsToUpdate = updateControlObj.propsToUpdate;
+            // Loop through the propsToUpdate object and set values.
+            const keys = Object.keys(propsToUpdate);
+            const formControl = newForm[updateControlObj.name];
+            for (let j = 0; j < keys.length; j++) {
+                const property = keys[j];
+                // safety check. We dont want to add random properties.
+                if (!formControl.hasOwnProperty(property)) {
+                    throw new Error(`Property ${property} doesn't exist for ${updateControlObj.name} formControl.`);
+                }
+                const newValue = propsToUpdate[property];
+                formControl[property] = newValue; // update the property with the new value
+            }
+        }
+
+        setForm({ ...form, ...newForm });
+    }, [form]);
 
     /**
      returns a boolean value indicating whether overall form is valid.
@@ -121,7 +160,7 @@ const useForm = (formObject) => {
         return values;
     }, [form]);
 
-    return { getFormValues, renderFormControls, isFormValid };
+    return { getFormValues, renderFormControls, isFormValid, updateControls };
 };
 
 export default  useForm;
