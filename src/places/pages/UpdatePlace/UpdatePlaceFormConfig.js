@@ -1,5 +1,5 @@
 import React from 'react';
-import Input from '../../../shared/components/FormElements/Input'
+import Input from '../../../shared/components/FormElements/Input/Input'
 import { requiredRule, minLengthRule } from '../../../shared/utils/validators';
 
 // object representation of update place form.

@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 
 const useForm = (formObject) => {
+    // TODO: Maybe try using useReducer instead of useState.
     const [form, setForm] = useState(formObject);
 
     /**
@@ -94,7 +95,7 @@ const useForm = (formObject) => {
      Updates the value of properties on form controls.
      @param {Array<any>} controlsToUpdate - An array of objects representing the controls to update.
      For example: [{name: 'title', propsToUpdate: {value: 'New value', isTouched: true}}, { name: 'description', propsToUpdate: {value: 'Some value', isValid: true}}]
-     will update the value and isTouched for title and update value and isValid for description.
+     will update the value and isTouched for title and update the value and isValid for description.
      @param {boolean} shouldRunValidationRules - A boolean flag to indicate whether the validation rules
      should be run. Default value is false.
      */
