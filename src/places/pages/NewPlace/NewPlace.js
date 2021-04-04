@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Button from '../../../shared/components/FormElements/Button';
+import Button from '../../../shared/components/FormElements/Button/Button';
 import useForm from '../../../shared/hooks/useForm';
 
 import './NewPlace.css';

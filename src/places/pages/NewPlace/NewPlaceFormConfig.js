@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Input from "../../../shared/components/FormElements/Input";
+import Input from "../../../shared/components/FormElements/Input/Input";
 
 import { minLengthRule, requiredRule } from "../../../shared/utils/validators";
 

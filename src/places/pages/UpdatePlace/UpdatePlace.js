@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Card from '../../../shared/components/UIElements/Card';
-import Button from '../../../shared/components/FormElements/Button';
+import Card from '../../../shared/components/UIElements/Card/Card';
+import Button from '../../../shared/components/FormElements/Button/Button';
 
 import './UpdatePlace.css';
 
@@ -18,10 +18,14 @@ const UpdatePlace = () => {
     useEffect(() => {
         // TODO: Make http request to backend to retrieve place.
         // Since there's no backend, retrieve from DUMMY_PLACES array.
-        const placeToUpdate = DUMMY_PLACES.find(p => p.id === placeId) || null;
-        console.log('placeId changed and it\'s value is ', placeId, '. The place is ', placeToUpdate);
-        setPlace(placeToUpdate);
-        setIsLoading(false);
+        // Mimic waiting for http request with setTimeout();
+        const timeout =  setTimeout(() => {
+            const placeToUpdate = DUMMY_PLACES.find(p => p.id === placeId) || null;
+            console.log('placeId changed and it\'s value is ', placeId, '. The place is ', placeToUpdate);
+            setPlace(placeToUpdate);
+            setIsLoading(false);
+        }, 2000);
+        
     }, [placeId])
 
     useEffect(() => {

@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 
-import Card from '../../shared/components/UIElements/Card';
-import Button from '../../shared/components/FormElements/Button';
-import Modal from '../../shared/components/UIElements/Modal';
-import Map from '../../shared/components/UIElements/Map';
+import Card from '../../../shared/components/UIElements/Card/Card';
+import Button from '../../../shared/components/FormElements/Button/Button';
+import Modal from '../../../shared/components/UIElements/Modal/Modal';
+import Map from '../../../shared/components/UIElements/Map/Map';
 
 import './PlaceItem.css';
 
