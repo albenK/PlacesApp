@@ -25,6 +25,13 @@ const UpdatePlace = () => {
             setPlace(placeToUpdate);
             setIsLoading(false);
         }, 2000);
+
+        return () => {
+            console.log('timeout is ', timeout);
+            if (typeof timeout === 'number') {
+                clearTimeout(timeout);
+            } 
+        }
         
     }, [placeId])
 
@@ -42,7 +49,7 @@ const UpdatePlace = () => {
         /* This eslint rule is needed to hide a warning about adding updateControls as a
         dependency for this useEffect Hook. */
         // eslint-disable-next-line
-    }, [place])
+    }, [place]);
 
 
     const updatePlace = (event) => {
