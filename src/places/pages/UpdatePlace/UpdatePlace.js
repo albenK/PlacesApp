@@ -53,7 +53,7 @@ const UpdatePlace = () => {
 
 
     const updatePlace = (event) => {
-        event.preventDefault(); // dont refresh the browser.
+        event.preventDefault(); // dont refresh the page.
         console.log('form values are ', getFormValues());
         if (!isFormValid()) {
             return;
@@ -76,7 +76,7 @@ const UpdatePlace = () => {
     }
 
     return (
-        <form className="update-place-form">
+        <form className="update-place-form" onSubmit={updatePlace}>
             {renderFormControls()}
             <Button type="submit" disabled={!isFormValid()} onClick={updatePlace}>UPDATE PLACE</Button>
         </form>

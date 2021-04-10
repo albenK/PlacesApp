@@ -20,7 +20,7 @@ const NewPlace = () => {
     };
 
     return (
-        <form className="place-form">
+        <form className="place-form" onSubmit={addPlace}>
             {renderFormControls()}
             <Button type="submit" onClick={addPlace} disabled={!isFormValid()}>ADD PLACE</Button>
         </form>

@@ -36,7 +36,7 @@ export const requiredRule = (formControlName) => {
 export const minLengthRule = (formControlName, minCharacters) => {
     return createValidationRule(
         VALIDATOR_TYPE_MINLENGTH,
-        `${formControlName} should contain atleast ${minCharacters} characters`,
+        `${formControlName} should contain at least ${minCharacters} characters`,
         (formControlValue, form) => formControlValue.length >= minCharacters
     );
 }
