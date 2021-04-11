@@ -1,7 +1,9 @@
 import { useCallback, useState } from "react";
 
 const useForm = (formObject) => {
-    // TODO: Maybe try using useReducer instead of useState.
+    // TODO: Maybe try using useReducer instead of useState. This could improve performance.
+    // Right now all of the useCallback() functions have dependency on form, so it will create new
+    // function reference. Using useReducer may help since we can just call dispatch({ ... }) and have no dependency.
     const [form, setForm] = useState(formObject);
 
     /**
@@ -145,6 +147,57 @@ const useForm = (formObject) => {
     }, [form, getValidityOfFormControl]);
 
     /**
+        Add new controls to the form.
+        @param {Array<any>} controlsToAdd - An array of controls to add.
+        For example: [{renderControls: () => { ... }, id: 'fullName', label: 'Full Name', name: 'fullname', value: '', placeholder: '', isValid: false, isTouched: false, errorMessage: '', validationRules: [ ...]}, { ... }]
+     */
+    const addControls = useCallback((controlsToAdd) => {
+        if (!controlsToAdd || !Array.isArray(controlsToAdd)) {
+            throw new Error(`arg ${controlsToAdd} is not a valid argument.`);
+        }
+
+        const newForm = { ...form };
+        // Loop through the array and add controls to newForm.
+        for (let i = 0; i < controlsToAdd.length; i++) {
+            const controlToAdd = controlsToAdd[i]; // { renderControl: () => { ... }, id: 'id', label: '', name ... }
+            newForm[controlToAdd.name] = { ...controlToAdd };
+        }
+
+        setForm({ ...newForm });
+    }, [form]);
+
+    /**
+        Remove controls from the form.
+        @param {Array<string>} controlsToRemove - An array of controls to remove.
+        Each element in the array will be a string and it should be the name of the form control to remove.
+        For example: ['fullname', 'email', 'password'] will remove the fullname, email and password controls from the form.
+     */
+    const removeControls = useCallback((controlsToRemove) => {
+        if (!controlsToRemove || !Array.isArray(controlsToRemove)) {
+            throw new Error(`arg ${controlsToRemove} is not a valid argument.`);
+        }
+
+        const newForm = { ...form };
+        // loop through array and delete key-value pairs from the form.
+        for (let i = 0; i < controlsToRemove.length; i++) {
+            const name = controlsToRemove[i];
+            delete newForm[name];
+        }
+
+        setForm({ ...newForm });
+    }, [form]);
+
+    /**
+        Set the form. This function can be used to reset the entire form if needed.
+        @param formObj - object representation of the form.
+        For example: { 'fullname': {renderControls: () => { ... }, id: 'fullName', label: 'Full Name', name: 'fullname', value: '', placeholder: '', isValid: false, isTouched: false, errorMessage: '', validationRules: [ ...]}, 'email': { ... }, ... }
+     */
+    const setTheForm = useCallback((formObj) => {
+        const newForm = { ...formObj };
+        setForm({ ...newForm });
+    }, []);
+
+    /**
      returns a boolean value indicating whether overall form is valid.
      If any FormControl is invalid, then the whole form is invalid.
      */
@@ -179,7 +232,15 @@ const useForm = (formObject) => {
         return values;
     }, [form]);
 
-    return { getFormValues, renderFormControls, isFormValid, updateControls };
+    return { 
+        getFormValues,
+        renderFormControls,
+        isFormValid,
+        updateControls,
+        addControls,
+        removeControls,
+        setTheForm
+    };
 };
 
 export default  useForm;
