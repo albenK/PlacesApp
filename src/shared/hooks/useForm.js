@@ -81,7 +81,8 @@ const useForm = (formObject) => {
     /**
      returns an array of JSX elements we want to render within our form.
      This will use the JSX element we return within the renderControl() method of the FormConfig object.
-     */
+     TODO: Remove this method and replace it with a getFormControls() method. Perhaps this hook shouldn't
+     be responsible for rendering the UI. The responsibility should go to the component that uses this hook.*/
     const renderFormControls = () => {
         const formControls = Object.values(form);
         const jsxElements = formControls.map((control) => {
