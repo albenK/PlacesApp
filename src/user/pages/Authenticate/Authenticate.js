@@ -4,31 +4,22 @@ import Button from '../../../shared/components/FormElements/Button/Button';
 import Card from '../../../shared/components/UIElements/Card/Card';
 import useForm from '../../../shared/hooks/useForm';
 import './Authenticate.css';
-import { SIGN_IN_FORM_CONFIG, SIGN_UP_FORM_CONFIG, NAME_CONTROL_CONFIG } from './AuthenticateFormConfig';
+import { SIGN_IN_FORM_CONFIG,  NAME_CONTROL_CONFIG } from './AuthenticateFormConfig';
 
 const Authenticate = () => {
     const [isLoginMode, setIsLoginMode] = useState(true);
-    const { getFormValues, renderFormControls, isFormValid, addControls, updateControls, removeControls, setTheForm } = useForm(SIGN_IN_FORM_CONFIG);
+    const { getFormValues, renderFormControls, isFormValid, addControls, removeControls } = useForm(SIGN_IN_FORM_CONFIG);
 
     const switchAuthModeHandler = () => {
-        // debugger;
         const isLogin = !isLoginMode;
-        console.log('isLogin is ', isLogin);
-        // // if we're in login mode, remove the name control
-        // if (isLogin) {
-        //     removeControls(['name']);
-        // }
-        // else { // else we're in sign up mode, so add the name control.
-        //     addControls([NAME_CONTROL_CONFIG]);
-        // }
-        // TODO: Think of a better way to do this!
-        const formValues = getFormValues();
-        const formControls = isLogin ? { 
-            ...SIGN_IN_FORM_CONFIG, emailAddress: { ...SIGN_IN_FORM_CONFIG.emailAddress, value: formValues.emailAddress.value, isValid: formValues.emailAddress.isValid}, password: { ...SIGN_IN_FORM_CONFIG.password, value: formValues.password.value, isValid: formValues.password.isValid} } 
-            : { 
-                ...SIGN_UP_FORM_CONFIG, emailAddress: { ...SIGN_UP_FORM_CONFIG.emailAddress, value: formValues.emailAddress.value, isValid: formValues.emailAddress.isValid}, password: { ...SIGN_UP_FORM_CONFIG.password, value: formValues.password.value, isValid: formValues.password.isValid} } 
+        // if we're about to be in login mode, remove the name control
+        if (isLogin) {
+            removeControls(['name']);
+        }
+        else { // else we're about to be in sign up mode, so add the name control. order should be ['name', 'emailAddress', 'password']
+            addControls([NAME_CONTROL_CONFIG], [NAME_CONTROL_CONFIG.name, SIGN_IN_FORM_CONFIG.emailAddress.name, SIGN_IN_FORM_CONFIG.password.name]);
+        }
         setIsLoginMode((previousValue) => !previousValue);
-        setTheForm(formControls);
     };
 
     const authSubmitHandler = (event) => {

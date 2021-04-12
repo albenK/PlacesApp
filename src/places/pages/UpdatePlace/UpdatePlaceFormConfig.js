@@ -10,6 +10,7 @@ export const UPDATE_PLACE_FORM_CONFIG = {
                 <Input
                     key={key}
                     element="input"
+                    type="text"
                     {...formControl}
                     handleChange={handleChange}
                     handleBlur={handleBlur}

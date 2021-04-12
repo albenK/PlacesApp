@@ -150,17 +150,47 @@ const useForm = (formObject) => {
         Add new controls to the form.
         @param {Array<any>} controlsToAdd - An array of controls to add.
         For example: [{renderControls: () => { ... }, id: 'fullName', label: 'Full Name', name: 'fullname', value: '', placeholder: '', isValid: false, isTouched: false, errorMessage: '', validationRules: [ ...]}, { ... }]
-     */
-    const addControls = useCallback((controlsToAdd) => {
+        @param {Array<string>} orders - An array of strings that defines the order in which the controls
+        should be rendered in the UI. Each element in this array should be the name of a control.
+        For example: ['fullname', 'email', 'password'], will render the fullname control first, then
+        render email and finally password.
+        */
+    const addControls = useCallback((controlsToAdd, orders = []) => {
         if (!controlsToAdd || !Array.isArray(controlsToAdd)) {
-            throw new Error(`arg ${controlsToAdd} is not a valid argument.`);
+            throw new Error(`arg controlsToAdd: ${controlsToAdd} is not a valid argument.`);
         }
-
-        const newForm = { ...form };
-        // Loop through the array and add controls to newForm.
-        for (let i = 0; i < controlsToAdd.length; i++) {
-            const controlToAdd = controlsToAdd[i]; // { renderControl: () => { ... }, id: 'id', label: '', name ... }
-            newForm[controlToAdd.name] = { ...controlToAdd };
+        if (!orders || !Array.isArray(controlsToAdd)) {
+            throw new Error(`arg orders: ${orders} is not a valid argument.`);
+        }
+        let newForm = { ...form };
+        if (!orders.length) { // if orders is an empty array, just append the new controls
+            // Loop through the array and add controls to the form.
+            for (let i = 0; i < controlsToAdd.length; i++) {
+                const controlToAdd = controlsToAdd[i]; // { renderControl: () => { ... }, id: 'id', label: '', name ... }
+                newForm[controlToAdd.name] = { ...controlToAdd };
+            }
+        }
+        else { // else, order the controls based on orders array.
+            newForm = {};
+            const formControls = Object.values(form);
+            const totalNumberOfControls = formControls.length + controlsToAdd.length;
+            if (orders.length < totalNumberOfControls ) {
+                throw new Error(`Provide all of the names of the controls that are going to be in this form. This is needed to order the form. ${orders} were the only controls provided.`);
+            }
+            for (let i = 0; i < orders.length; i++) {
+                const formControlName = orders[i];
+                // find a control with a name of formControlName
+                const control = formControls.find(c => c.name === formControlName);
+                if (control) { // if the control exists in the current form, append it to newForm.
+                    newForm[control.name] = { ...control };
+                }
+                else { // else, this is a new control we want to add.
+                    const newControl = controlsToAdd.find(c => c.name === formControlName);
+                    if (newControl) {
+                        newForm[newControl.name] = { ...newControl };
+                    }
+                }
+            }
         }
 
         setForm({ ...newForm });

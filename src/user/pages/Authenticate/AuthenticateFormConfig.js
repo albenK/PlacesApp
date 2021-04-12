@@ -91,13 +91,14 @@ export const SIGN_IN_FORM_CONFIG = {
                     key={key}
                     element="input"
                     type="email"
+                    autoComplete="email"
                     {...formControl}
                     handleChange={handleChange}
                     handleBlur={handleBlur}
                 />
             );
         },
-        id: 'signUpEmail',
+        id: 'signInEmail',
         label: 'Email Address',
         name: 'emailAddress',
         placeholder: '',
@@ -117,13 +118,14 @@ export const SIGN_IN_FORM_CONFIG = {
                     key={key}
                     element="input"
                     type="password"
+                    autoComplete="current-password"
                     {...formControl}
                     handleChange={handleChange}
                     handleBlur={handleBlur}
                 />
             );
         },
-        id: 'signUpPassword',
+        id: 'password',
         label: 'Password',
         name: 'password',
         placeholder: '',
@@ -132,7 +134,7 @@ export const SIGN_IN_FORM_CONFIG = {
         isTouched: false,
         errorMessage: '',
         validationRules: [
-            minLengthRule('Password', 5),
+            minLengthRule('Password', 5)
         ]
     }
 };
@@ -144,6 +146,7 @@ export const NAME_CONTROL_CONFIG = {
                 key={key}
                 element="input"
                 type="text"
+                autoComplete="name"
                 {...formControl}
                 handleChange={handleChange}
                 handleBlur={handleBlur}

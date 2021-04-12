@@ -70,6 +70,7 @@ export const New_Place_Form_Config = {
                 <Input
                     key={key}
                     element="input"
+                    type="text"
                     {...formControl}
                     handleChange={handleChange}
                     handleBlur={handleBlur}
