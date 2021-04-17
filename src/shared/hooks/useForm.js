@@ -139,7 +139,7 @@ const useForm = (formObject) => {
     /**
         Add new controls to the form.
         @param {Array<any>} controlsToAdd - An array of controls to add.
-        For example: [{renderControls: () => { ... }, id: 'fullName', label: 'Full Name', name: 'fullname', value: '', placeholder: '', isValid: false, isTouched: false, errorMessage: '', validationRules: [ ...]}, { ... }]
+        For example: [{id: 'fullName', label: 'Full Name', name: 'fullname', value: '', elementConfigs: {...}, isValid: false, isTouched: false, errorMessage: '', validationRules: [ ...]}, { ... }]
     */
     const addControls = useCallback((controlsToAdd) => {
         if (!controlsToAdd || !Array.isArray(controlsToAdd)) {
@@ -148,7 +148,7 @@ const useForm = (formObject) => {
         let newForm = { ...form };
         // Loop through the array and add controls to the form.
         for (let i = 0; i < controlsToAdd.length; i++) {
-            const controlToAdd = controlsToAdd[i]; // { renderControl: () => { ... }, id: 'id', label: '', name ... }
+            const controlToAdd = controlsToAdd[i]; // {id: 'id', label: '', name ... }
             newForm[controlToAdd.name] = { ...controlToAdd };
         }
         setForm({ ...newForm });
@@ -156,7 +156,7 @@ const useForm = (formObject) => {
 
     /**
         Remove controls from the form.
-        @param {Array<string>} controlsToRemove - An array of controls to remove.
+        @param {Array<string>} controlsToRemove - An array of control names to remove.
         Each element in the array will be a string and it should be the name of the form control to remove.
         For example: ['fullname', 'email', 'password'] will remove the fullname, email and password controls from the form.
      */
@@ -178,7 +178,7 @@ const useForm = (formObject) => {
     /**
         Set the form. This function can be used to reset the entire form if needed.
         @param formObj - object representation of the form.
-        For example: { 'fullname': {renderControls: () => { ... }, id: 'fullName', label: 'Full Name', name: 'fullname', value: '', placeholder: '', isValid: false, isTouched: false, errorMessage: '', validationRules: [ ...]}, 'email': { ... }, ... }
+        For example: { 'fullname': {id: 'fullName', label: 'Full Name', name: 'fullname', value: '', elementConfigs: {...}, isValid: false, isTouched: false, errorMessage: '', validationRules: [ ...]}, 'email': { ... }, ... }
      */
     const setTheForm = useCallback((formObj) => {
         const newForm = { ...formObj };
@@ -202,23 +202,6 @@ const useForm = (formObject) => {
         }
         return isValid;
     }, [form]);
-
-    /**
-     returns the values of the form. Each key in this object represents
-     the name of the FormControl. The value for the key will be an object
-     that has an isValid property and a value property.
-     */
-    // const getFormValues = useCallback(() => {
-    //     const values = {};
-    //     const formControlNames = Object.keys(form);
-    //     for (let i = 0; i < formControlNames.length; i++) {
-    //         const name = formControlNames[i];
-    //         values[name] = {};
-    //         values[name]['isValid'] = form[name]['isValid'];
-    //         values[name]['value'] = form[name]['value'];
-    //     }
-    //     return values;
-    // }, [form]);
 
     return { 
         getFormControls,

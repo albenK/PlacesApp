@@ -1,22 +1,8 @@
-import React from 'react';
-import Input from '../../../shared/components/FormElements/Input/Input'
 import { requiredRule, minLengthRule } from '../../../shared/utils/validators';
 
 // object representation of update place form.
 export const UPDATE_PLACE_FORM_CONFIG = {
     title: {
-        renderControl: (formControl, handleChange, handleBlur, key) => {
-            return (
-                <Input
-                    key={key}
-                    element="input"
-                    type="text"
-                    {...formControl}
-                    handleChange={handleChange}
-                    handleBlur={handleBlur}
-                />
-            );
-        },
         id: 'title',
         label: 'Title',
         name: 'title',
@@ -35,17 +21,6 @@ export const UPDATE_PLACE_FORM_CONFIG = {
         ]
     },
     description: {
-        renderControl: (formControl, handleChange, handleBlur, key) => {
-            return (
-                <Input
-                    key={key}
-                    element="textarea"
-                    {...formControl}
-                    handleChange={handleChange}
-                    handleBlur={handleBlur}
-                />
-            );
-        },
         id: 'description',
         label: 'Description',
         name: 'description',
