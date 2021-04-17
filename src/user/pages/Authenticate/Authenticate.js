@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Button from '../../../shared/components/FormElements/Button/Button';
 import Input from '../../../shared/components/FormElements/Input/Input';
 
 import Card from '../../../shared/components/UIElements/Card/Card';
+
 import useForm from '../../../shared/hooks/useForm';
+import { AuthContext } from '../../../shared/context/AuthContext';
+
 import './Authenticate.css';
 import { SIGN_IN_FORM_CONFIG,  NAME_CONTROL_CONFIG } from './AuthenticateFormConfig';
 
 const Authenticate = () => {
+    const auth = useContext(AuthContext);
     const [isLoginMode, setIsLoginMode] = useState(true);
     const { getFormControls, isFormValid, addControls, removeControls, onControlChange, onControlBlur } = useForm(SIGN_IN_FORM_CONFIG);
     const formControls = getFormControls();
@@ -29,6 +33,14 @@ const Authenticate = () => {
         console.log('form state is ', getFormControls());
         if (!isFormValid()) {
             return;
+        }
+
+        // TODO: Make HTTP request to sign in or sign up. For now fake a login.
+        if (isLoginMode) {
+            auth.login();
+        } else {
+            // Sign Up
+            console.log('Implement Sign Up');
         }
     };
 
