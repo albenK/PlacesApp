@@ -18,7 +18,7 @@ const Authenticate = () => {
         if (isLogin) {
             removeControls(['name']);
         }
-        else { // else we're about to be in sign up mode, so add the name control. order should be ['name', 'emailAddress', 'password']
+        else { // else we're about to be in sign up mode, so add the name control.
             addControls([NAME_CONTROL_CONFIG]);
         }
         setIsLoginMode((previousValue) => !previousValue);
