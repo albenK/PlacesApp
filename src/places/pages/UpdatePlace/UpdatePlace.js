@@ -8,18 +8,19 @@ import './UpdatePlace.css';
 import { DUMMY_PLACES } from '../UserPlaces/UserPlaces';
 import useForm from '../../../shared/hooks/useForm';
 import { UPDATE_PLACE_FORM_CONFIG } from './UpdatePlaceFormConfig';
+import Input from '../../../shared/components/FormElements/Input/Input';
 
 const UpdatePlace = () => {
     const placeId = useParams().placeId;
     const [place, setPlace] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const { getFormValues, renderFormControls, isFormValid, updateControls } = useForm(UPDATE_PLACE_FORM_CONFIG);
+    const { getFormControls, isFormValid, onControlChange, onControlBlur, updateControls } = useForm(UPDATE_PLACE_FORM_CONFIG);
 
     useEffect(() => {
         // TODO: Make http request to backend to retrieve place.
         // Since there's no backend, retrieve from DUMMY_PLACES array.
         // Mimic waiting for http request with setTimeout();
-        const timeout =  setTimeout(() => {
+        const timeout = setTimeout(() => {
             const placeToUpdate = DUMMY_PLACES.find(p => p.id === placeId) || null;
             console.log('placeId changed and it\'s value is ', placeId, '. The place is ', placeToUpdate);
             setPlace(placeToUpdate);
@@ -33,7 +34,7 @@ const UpdatePlace = () => {
             } 
         }
         
-    }, [placeId])
+    }, [placeId]);
 
     useEffect(() => {
         console.log('The value of place has changed.', place);
@@ -54,10 +55,27 @@ const UpdatePlace = () => {
 
     const updatePlace = (event) => {
         event.preventDefault(); // dont refresh the page.
-        console.log('form values are ', getFormValues());
+        console.log('form state is ', getFormControls());
         if (!isFormValid()) {
             return;
         }
+        // TODO: Make HTTP request to backend to update the place.
+    };
+
+    const renderFormControls = () => {
+        const controls = getFormControls();
+        return Object.values(controls).map(control => {
+            return (
+                <Input
+                    key={control.id}
+                    element={control.elementConfigs.element}
+                    type={control.elementConfigs.type}
+                    {...control}
+                    handleChange={onControlChange}
+                    handleBlur={onControlBlur}
+                />
+            );
+        });
     };
     
     if (isLoading) {
@@ -78,7 +96,7 @@ const UpdatePlace = () => {
     return (
         <form className="update-place-form" onSubmit={updatePlace}>
             {renderFormControls()}
-            <Button type="submit" disabled={!isFormValid()} onClick={updatePlace}>UPDATE PLACE</Button>
+            <Button type="submit" disabled={!isFormValid()}>UPDATE PLACE</Button>
         </form>
     );
 };

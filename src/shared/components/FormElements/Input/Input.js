@@ -25,13 +25,13 @@ const Input = (props) => {
             type={type}
             name={name}
             placeholder={placeholder}
-            autoComplete={autoComplete || 'on'}
+            autoComplete={autoComplete}
             onChange={handleChange}
             onBlur={handleBlur}
             value={value}
         />
     ) : (
-        <textarea id={id} rows={props.rows || 3} name={name} autoComplete={autoComplete || 'on'} onChange={handleChange} onBlur={handleBlur} value={value}/>
+        <textarea id={id} rows={props.rows || 3} name={name} autoComplete={autoComplete} onChange={handleChange} onBlur={handleBlur} value={value}/>
     );
 
     return (

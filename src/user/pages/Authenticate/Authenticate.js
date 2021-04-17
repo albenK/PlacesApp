@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Button from '../../../shared/components/FormElements/Button/Button';
+import Input from '../../../shared/components/FormElements/Input/Input';
 
 import Card from '../../../shared/components/UIElements/Card/Card';
 import useForm from '../../../shared/hooks/useForm';
@@ -8,8 +9,9 @@ import { SIGN_IN_FORM_CONFIG,  NAME_CONTROL_CONFIG } from './AuthenticateFormCon
 
 const Authenticate = () => {
     const [isLoginMode, setIsLoginMode] = useState(true);
-    const { getFormValues, renderFormControls, isFormValid, addControls, removeControls } = useForm(SIGN_IN_FORM_CONFIG);
-
+    const { getFormControls, isFormValid, addControls, removeControls, onControlChange, onControlBlur } = useForm(SIGN_IN_FORM_CONFIG);
+    const formControls = getFormControls();
+    
     const switchAuthModeHandler = () => {
         const isLogin = !isLoginMode;
         // if we're about to be in login mode, remove the name control
@@ -17,14 +19,14 @@ const Authenticate = () => {
             removeControls(['name']);
         }
         else { // else we're about to be in sign up mode, so add the name control. order should be ['name', 'emailAddress', 'password']
-            addControls([NAME_CONTROL_CONFIG], [NAME_CONTROL_CONFIG.name, SIGN_IN_FORM_CONFIG.emailAddress.name, SIGN_IN_FORM_CONFIG.password.name]);
+            addControls([NAME_CONTROL_CONFIG]);
         }
         setIsLoginMode((previousValue) => !previousValue);
     };
 
     const authSubmitHandler = (event) => {
         event.preventDefault(); // prevent browser from refreshing the page.
-        console.log('form values are ', getFormValues());
+        console.log('form state is ', getFormControls());
         if (!isFormValid()) {
             return;
         }
@@ -35,8 +37,36 @@ const Authenticate = () => {
            <h2>{ isLoginMode ? 'Login Required' : 'Please Sign Up'}</h2>
            <hr/>
            <form onSubmit={authSubmitHandler}>
-            {renderFormControls()}
-            <Button type="submit" disabled={!isFormValid()} onClick={authSubmitHandler}>{ isLoginMode ? 'LOGIN' : 'SIGN UP'}</Button>
+            {
+                formControls.name ? (
+                    <Input 
+                        element={formControls.name.elementConfigs.element}
+                        type={formControls.name.elementConfigs.type}
+                        autoComplete={formControls.name.elementConfigs.autoComplete}
+                        { ...formControls.name }
+                        handleChange={onControlChange}
+                        handleBlur={onControlBlur}
+                    /> 
+                ) : null
+            }
+            <Input
+                element={formControls.emailAddress.elementConfigs.element}
+                type={formControls.emailAddress.elementConfigs.type}
+                autoComplete={formControls.emailAddress.elementConfigs.autoComplete}
+                { ...formControls.emailAddress }
+                handleChange={onControlChange}
+                handleBlur={onControlBlur}
+            />
+
+            <Input
+                element={formControls.password.elementConfigs.element}
+                type={formControls.password.elementConfigs.type}
+                autoComplete={formControls.password.elementConfigs.autoComplete}
+                { ...formControls.password }
+                handleChange={onControlChange}
+                handleBlur={onControlBlur}
+            />
+            <Button type="submit" disabled={!isFormValid()}>{ isLoginMode ? 'LOGIN' : 'SIGN UP'}</Button>
            </form>
            <Button inverse onClick={switchAuthModeHandler}>{isLoginMode ? 'SWITCH TO SIGN UP' : 'SWITCH TO LOGIN'}</Button>
        </Card>

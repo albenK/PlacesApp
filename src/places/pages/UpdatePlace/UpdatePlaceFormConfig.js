@@ -18,8 +18,14 @@ export const UPDATE_PLACE_FORM_CONFIG = {
             );
         },
         id: 'title',
-        name: 'title',
         label: 'Title',
+        name: 'title',
+        elementConfigs: {
+            element: 'input',
+            type: 'text',
+            placeholder: '',
+            autoComplete: 'on'
+        },
         value: '',
         isValid: false,
         isTouched: false,
@@ -41,8 +47,12 @@ export const UPDATE_PLACE_FORM_CONFIG = {
             );
         },
         id: 'description',
-        name: 'description',
         label: 'Description',
+        name: 'description',
+        elementConfigs: {
+            element: 'textArea',
+            autoComplete: 'on'
+        },
         value: '',
         isValid: false,
         isTouched: false,

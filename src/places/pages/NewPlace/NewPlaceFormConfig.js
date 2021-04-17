@@ -30,9 +30,14 @@ export const New_Place_Form_Config = {
             );
         },
         id: 'title',
-        name: 'title',
         label: 'Title',
-        placeholder: '',
+        name: 'title',
+        elementConfigs: {
+            element: 'input',
+            type: 'text',
+            placeholder: '',
+            autoComplete: 'on'
+        },
         value: '',
         isValid: false,
         isTouched: false,
@@ -54,8 +59,12 @@ export const New_Place_Form_Config = {
             );
         },
         id: 'description',
-        name: 'description',
         label: 'Description',
+        name: 'description',
+        elementConfigs: {
+            element: 'textArea',
+            autoComplete: 'on'
+        },
         value: '',
         isValid: false,
         isTouched: false,
@@ -78,8 +87,14 @@ export const New_Place_Form_Config = {
             );
         },
         id: 'address',
-        name: 'address',
         label: 'Address',
+        name: 'address',
+        elementConfigs: {
+            element: 'input',
+            type: 'text',
+            placeholder: '',
+            autoComplete: 'on'
+        },
         value: '',
         isValid: false,
         isTouched: false,

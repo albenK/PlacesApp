@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 const useForm = (formObject) => {
     // TODO: Maybe try using useReducer instead of useState. This could improve performance.
     // Right now all of the useCallback() functions have dependency on form, so it will create new
-    // function reference. Using useReducer may help since we can just call dispatch({ ... }) and have no dependency.
+    // function reference whenever form changes. Using useReducer may help since we can just call dispatch({ ... }) and have no dependency.
     const [form, setForm] = useState(formObject);
 
     /**
@@ -52,7 +52,7 @@ const useForm = (formObject) => {
 
     }, [form, getValidityOfFormControl]);
 
-    const onBlurChange = useCallback((event) => {
+    const onControlBlur = useCallback((event) => {
         const { name } = event.target;
         console.log('blur event happened. name is ', name);
         if (!form[name]) { // safety check
@@ -78,21 +78,10 @@ const useForm = (formObject) => {
         setForm({ ...form, [name]: formControl });
     }, [form, getValidityOfFormControl]);
 
-    /**
-     returns an array of JSX elements we want to render within our form.
-     This will use the JSX element we return within the renderControl() method of the FormConfig object.
-     TODO: Remove this method and replace it with a getFormControls() method. Perhaps this hook shouldn't
-     be responsible for rendering the UI. The responsibility should go to the component that uses this hook.*/
-    const renderFormControls = () => {
-        const formControls = Object.values(form);
-        const jsxElements = formControls.map((control) => {
-            const renderControl = control.renderControl;
-            // we dont want access to the renderControl method within our component, so null it out.
-            const c = { ...control, renderControl: null };
-            return renderControl(c, onControlChange, onBlurChange, control.id);
-        });
-        return jsxElements;
-    };
+    /** Retrieve the current state of the form.*/
+    const getFormControls = useCallback(() => {
+        return { ...form };
+    }, [form]);
 
     /**
      Updates the value of properties on form controls.
@@ -151,49 +140,17 @@ const useForm = (formObject) => {
         Add new controls to the form.
         @param {Array<any>} controlsToAdd - An array of controls to add.
         For example: [{renderControls: () => { ... }, id: 'fullName', label: 'Full Name', name: 'fullname', value: '', placeholder: '', isValid: false, isTouched: false, errorMessage: '', validationRules: [ ...]}, { ... }]
-        @param {Array<string>} orders - An array of strings that defines the order in which the controls
-        should be rendered in the UI. Each element in this array should be the name of a control.
-        For example: ['fullname', 'email', 'password'], will render the fullname control first, then
-        render email and finally password.
-        */
-    const addControls = useCallback((controlsToAdd, orders = []) => {
+    */
+    const addControls = useCallback((controlsToAdd) => {
         if (!controlsToAdd || !Array.isArray(controlsToAdd)) {
             throw new Error(`arg controlsToAdd: ${controlsToAdd} is not a valid argument.`);
         }
-        if (!orders || !Array.isArray(controlsToAdd)) {
-            throw new Error(`arg orders: ${orders} is not a valid argument.`);
-        }
         let newForm = { ...form };
-        if (!orders.length) { // if orders is an empty array, just append the new controls
-            // Loop through the array and add controls to the form.
-            for (let i = 0; i < controlsToAdd.length; i++) {
-                const controlToAdd = controlsToAdd[i]; // { renderControl: () => { ... }, id: 'id', label: '', name ... }
-                newForm[controlToAdd.name] = { ...controlToAdd };
-            }
+        // Loop through the array and add controls to the form.
+        for (let i = 0; i < controlsToAdd.length; i++) {
+            const controlToAdd = controlsToAdd[i]; // { renderControl: () => { ... }, id: 'id', label: '', name ... }
+            newForm[controlToAdd.name] = { ...controlToAdd };
         }
-        else { // else, order the controls based on orders array.
-            newForm = {};
-            const formControls = Object.values(form);
-            const totalNumberOfControls = formControls.length + controlsToAdd.length;
-            if (orders.length < totalNumberOfControls ) {
-                throw new Error(`Provide all of the names of the controls that are going to be in this form. This is needed to order the form. ${orders} were the only controls provided.`);
-            }
-            for (let i = 0; i < orders.length; i++) {
-                const formControlName = orders[i];
-                // find a control with a name of formControlName
-                const control = formControls.find(c => c.name === formControlName);
-                if (control) { // if the control exists in the current form, append it to newForm.
-                    newForm[control.name] = { ...control };
-                }
-                else { // else, this is a new control we want to add.
-                    const newControl = controlsToAdd.find(c => c.name === formControlName);
-                    if (newControl) {
-                        newForm[newControl.name] = { ...newControl };
-                    }
-                }
-            }
-        }
-
         setForm({ ...newForm });
     }, [form]);
 
@@ -251,21 +208,22 @@ const useForm = (formObject) => {
      the name of the FormControl. The value for the key will be an object
      that has an isValid property and a value property.
      */
-    const getFormValues = useCallback(() => {
-        const values = {};
-        const formControlNames = Object.keys(form);
-        for (let i = 0; i < formControlNames.length; i++) {
-            const name = formControlNames[i];
-            values[name] = {};
-            values[name]['isValid'] = form[name]['isValid'];
-            values[name]['value'] = form[name]['value'];
-        }
-        return values;
-    }, [form]);
+    // const getFormValues = useCallback(() => {
+    //     const values = {};
+    //     const formControlNames = Object.keys(form);
+    //     for (let i = 0; i < formControlNames.length; i++) {
+    //         const name = formControlNames[i];
+    //         values[name] = {};
+    //         values[name]['isValid'] = form[name]['isValid'];
+    //         values[name]['value'] = form[name]['value'];
+    //     }
+    //     return values;
+    // }, [form]);
 
     return { 
-        getFormValues,
-        renderFormControls,
+        getFormControls,
+        onControlChange,
+        onControlBlur,
         isFormValid,
         updateControls,
         addControls,

@@ -101,7 +101,12 @@ export const SIGN_IN_FORM_CONFIG = {
         id: 'signInEmail',
         label: 'Email Address',
         name: 'emailAddress',
-        placeholder: '',
+        elementConfigs: {
+            element: 'input',
+            type: 'email',
+            placeholder: '',
+            autoComplete: 'email'
+        },
         value: '',
         isValid: false,
         isTouched: false,
@@ -128,7 +133,12 @@ export const SIGN_IN_FORM_CONFIG = {
         id: 'password',
         label: 'Password',
         name: 'password',
-        placeholder: '',
+        elementConfigs: {
+            element: 'input',
+            type: 'password',
+            placeholder: '',
+            autoComplete: 'current-password'
+        },
         value: '',
         isValid: false,
         isTouched: false,
@@ -156,7 +166,12 @@ export const NAME_CONTROL_CONFIG = {
     id: 'name',
     label: 'Your Name',
     name: 'name',
-    placeholder: '',
+    elementConfigs: {
+        element: 'input',
+        type: 'text',
+        placeholder: '',
+        autoComplete: 'name'
+    },
     value: '',
     isValid: false,
     isTouched: false,
