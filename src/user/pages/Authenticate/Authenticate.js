@@ -28,20 +28,38 @@ const Authenticate = () => {
         setIsLoginMode((previousValue) => !previousValue);
     };
 
-    const authSubmitHandler = (event) => {
+    const authSubmitHandler = async (event) => {
         event.preventDefault(); // prevent browser from refreshing the page.
-        console.log('form state is ', getFormControls());
+        console.log('form state is ', formControls);
         if (!isFormValid()) {
             return;
         }
 
         // TODO: Make HTTP request to sign in or sign up. For now fake a login.
         if (isLoginMode) {
-            auth.login();
+            // TODO: implement login
+            console.log('login');
         } else {
             // Sign Up
-            console.log('Implement Sign Up');
+            try {
+                const response = await fetch('http://localhost:5000/api/users/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: formControls.name.value,
+                        email: formControls.emailAddress.value,
+                        password: formControls.password.value
+                    })
+                });
+                const responseData = await response.json();
+                console.log('responseData is ', responseData);
+            } catch (error) {
+                console.log('WE HAVE AN ERROR! ', error);
+            }
         }
+
+        // login whether user is signing up or logging in.
+        auth.login();
     };
 
     return (
