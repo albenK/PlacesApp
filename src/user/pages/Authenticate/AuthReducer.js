@@ -6,7 +6,9 @@ export const AuthInitialState = {
 };
 
 export const ACTION_TYPES = {
-    TOGGLE_LOGIN_MODE: 'TOGGLE_LOGIN_MODE'
+    TOGGLE_LOGIN_MODE: 'TOGGLE_LOGIN_MODE',
+    SET_LOADING: 'SET_LOADING',
+    SET_ERROR: 'SET_ERROR'
 };
 
 export const AuthReducer = (state, action) => {
@@ -15,6 +17,16 @@ export const AuthReducer = (state, action) => {
             return {
                 ...state,
                 isLoginMode: !state.isLoginMode
+            };
+        case ACTION_TYPES.SET_LOADING:
+            return {
+                ...state,
+                isLoading: action.data
+            };
+        case ACTION_TYPES.SET_ERROR:
+            return {
+                ...state,
+                error: action.data
             };
         default:
             return state;

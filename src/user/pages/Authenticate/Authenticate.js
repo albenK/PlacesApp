@@ -3,6 +3,7 @@ import React, { useReducer, useContext } from 'react';
 import Button from '../../../shared/components/FormElements/Button/Button';
 import Input from '../../../shared/components/FormElements/Input/Input';
 import Card from '../../../shared/components/UIElements/Card/Card';
+import LoadingSpinner from '../../../shared/components/UIElements/LoadingSpinner/LoadingSpinner';
 
 import useForm from '../../../shared/hooks/useForm';
 import { AuthContext } from '../../../shared/context/AuthContext';
@@ -32,9 +33,9 @@ const Authenticate = () => {
     const authSubmitHandler = async (event) => {
         event.preventDefault(); // prevent browser from refreshing the page.
         console.log('form state is ', formControls);
-        if (!isFormValid()) {
-            return;
-        }
+        // if (!isFormValid()) {
+        //     return;
+        // }
 
         // TODO: Make HTTP request to sign in or sign up. For now fake a login.
         if (state.isLoginMode) {
@@ -43,6 +44,7 @@ const Authenticate = () => {
         } else {
             // Sign Up
             try {
+                dispatch({ type: ACTION_TYPES.SET_LOADING, data: true });
                 const response = await fetch('http://localhost:5000/api/users/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -54,14 +56,18 @@ const Authenticate = () => {
                 });
                 const responseData = await response.json();
                 console.log('responseData is ', responseData);
+                auth.login();
             } catch (error) {
                 console.log('WE HAVE AN ERROR! ', error);
+                dispatch({ type: ACTION_TYPES.SET_ERROR, data: error.message || 'Something went wrong. Please try again later.' });
             }
+            dispatch({ type: ACTION_TYPES.SET_LOADING, data: false });
         }
-
-        // login whether user is signing up or logging in.
-        auth.login();
     };
+
+    if (state.isLoading) {
+        return <LoadingSpinner asOverlay/>;
+    }
 
     return (
        <Card className="authentication">
