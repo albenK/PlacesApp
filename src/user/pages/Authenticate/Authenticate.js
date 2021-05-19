@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useReducer, useContext } from 'react';
+
 import Button from '../../../shared/components/FormElements/Button/Button';
 import Input from '../../../shared/components/FormElements/Input/Input';
-
 import Card from '../../../shared/components/UIElements/Card/Card';
 
 import useForm from '../../../shared/hooks/useForm';
@@ -9,15 +9,16 @@ import { AuthContext } from '../../../shared/context/AuthContext';
 
 import './Authenticate.css';
 import { SIGN_IN_FORM_CONFIG,  NAME_CONTROL_CONFIG } from './AuthenticateFormConfig';
+import { AuthInitialState, ACTION_TYPES, AuthReducer } from './AuthReducer';
 
 const Authenticate = () => {
     const auth = useContext(AuthContext);
-    const [isLoginMode, setIsLoginMode] = useState(true);
+    const [ state, dispatch ] = useReducer(AuthReducer, AuthInitialState);
     const { getFormControls, isFormValid, addControls, removeControls, onControlChange, onControlBlur } = useForm(SIGN_IN_FORM_CONFIG);
     const formControls = getFormControls();
     
     const switchAuthModeHandler = () => {
-        const isLogin = !isLoginMode;
+        const isLogin = !state.isLoginMode;
         // if we're about to be in login mode, remove the name control
         if (isLogin) {
             removeControls(['name']);
@@ -25,7 +26,7 @@ const Authenticate = () => {
         else { // else we're about to be in sign up mode, so add the name control.
             addControls([NAME_CONTROL_CONFIG]);
         }
-        setIsLoginMode((previousValue) => !previousValue);
+        dispatch({ type: ACTION_TYPES.TOGGLE_LOGIN_MODE });
     };
 
     const authSubmitHandler = async (event) => {
@@ -36,7 +37,7 @@ const Authenticate = () => {
         }
 
         // TODO: Make HTTP request to sign in or sign up. For now fake a login.
-        if (isLoginMode) {
+        if (state.isLoginMode) {
             // TODO: implement login
             console.log('login');
         } else {
@@ -64,7 +65,7 @@ const Authenticate = () => {
 
     return (
        <Card className="authentication">
-           <h2>{ isLoginMode ? 'Login Required' : 'Please Sign Up'}</h2>
+           <h2>{ state.isLoginMode ? 'Login Required' : 'Please Sign Up'}</h2>
            <hr/>
            <form onSubmit={authSubmitHandler}>
             {
@@ -96,9 +97,9 @@ const Authenticate = () => {
                 handleChange={onControlChange}
                 handleBlur={onControlBlur}
             />
-            <Button type="submit" disabled={!isFormValid()}>{ isLoginMode ? 'LOGIN' : 'SIGN UP'}</Button>
+            <Button type="submit" disabled={!isFormValid()}>{ state.isLoginMode ? 'LOGIN' : 'SIGN UP'}</Button>
            </form>
-           <Button inverse onClick={switchAuthModeHandler}>{isLoginMode ? 'SWITCH TO SIGN UP' : 'SWITCH TO LOGIN'}</Button>
+           <Button inverse onClick={switchAuthModeHandler}>{state.isLoginMode ? 'SWITCH TO SIGN UP' : 'SWITCH TO LOGIN'}</Button>
        </Card>
     );
 };
