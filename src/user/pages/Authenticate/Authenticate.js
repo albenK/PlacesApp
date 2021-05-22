@@ -4,6 +4,7 @@ import Button from '../../../shared/components/FormElements/Button/Button';
 import Input from '../../../shared/components/FormElements/Input/Input';
 import Card from '../../../shared/components/UIElements/Card/Card';
 import LoadingSpinner from '../../../shared/components/UIElements/LoadingSpinner/LoadingSpinner';
+import ErrorModal from '../../../shared/components/UIElements/Modal/ErrorModal/ErrorModal';
 
 import useForm from '../../../shared/hooks/useForm';
 import { AuthContext } from '../../../shared/context/AuthContext';
@@ -44,7 +45,7 @@ const Authenticate = () => {
         } else {
             // Sign Up
             try {
-                dispatch({ type: ACTION_TYPES.SET_LOADING, data: true });
+                dispatch({ type: ACTION_TYPES.SET_LOADING, payload: { isLoading: true } });
                 const response = await fetch('http://localhost:5000/api/users/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -56,57 +57,66 @@ const Authenticate = () => {
                 });
                 const responseData = await response.json();
                 console.log('responseData is ', responseData);
+                if (!response.ok) {
+                    throw new Error(responseData.message);
+                }
+                dispatch({ type: ACTION_TYPES.SET_LOADING, payload: { isLoading: false } });
                 auth.login();
             } catch (error) {
+                dispatch({ type: ACTION_TYPES.SET_LOADING, payload: { isLoading: false } });
                 console.log('WE HAVE AN ERROR! ', error);
-                dispatch({ type: ACTION_TYPES.SET_ERROR, data: error.message || 'Something went wrong. Please try again later.' });
-            }
-            dispatch({ type: ACTION_TYPES.SET_LOADING, data: false });
+                dispatch({ type: ACTION_TYPES.SET_ERROR, payload: { error: error.message ||  'Something went wrong. Please try again later.' } });
+            }   
         }
     };
 
-    if (state.isLoading) {
-        return <LoadingSpinner asOverlay/>;
-    }
+    const errorModalCloseHandler = () => {
+        dispatch({ type: ACTION_TYPES.SET_ERROR, payload: { error: null } });
+    };
 
     return (
-       <Card className="authentication">
-           <h2>{ state.isLoginMode ? 'Login Required' : 'Please Sign Up'}</h2>
-           <hr/>
-           <form onSubmit={authSubmitHandler}>
-            {
-                formControls.name ? (
-                    <Input 
-                        element={formControls.name.elementConfigs.element}
-                        type={formControls.name.elementConfigs.type}
-                        autoComplete={formControls.name.elementConfigs.autoComplete}
-                        { ...formControls.name }
+        <React.Fragment>
+            <ErrorModal error={state.error} onClear={errorModalCloseHandler}/>
+
+            <Card className="authentication">
+                {state.isLoading && <LoadingSpinner asOverlay/> }
+                <h2>{ state.isLoginMode ? 'Login Required' : 'Please Sign Up'}</h2>
+                <hr/>
+                <form onSubmit={authSubmitHandler}>
+                    {
+                        formControls.name ? (
+                            <Input 
+                                element={formControls.name.elementConfigs.element}
+                                type={formControls.name.elementConfigs.type}
+                                autoComplete={formControls.name.elementConfigs.autoComplete}
+                                { ...formControls.name }
+                                handleChange={onControlChange}
+                                handleBlur={onControlBlur}
+                            /> 
+                        ) : null
+                    }
+                    <Input
+                        element={formControls.emailAddress.elementConfigs.element}
+                        type={formControls.emailAddress.elementConfigs.type}
+                        autoComplete={formControls.emailAddress.elementConfigs.autoComplete}
+                        { ...formControls.emailAddress }
                         handleChange={onControlChange}
                         handleBlur={onControlBlur}
-                    /> 
-                ) : null
-            }
-            <Input
-                element={formControls.emailAddress.elementConfigs.element}
-                type={formControls.emailAddress.elementConfigs.type}
-                autoComplete={formControls.emailAddress.elementConfigs.autoComplete}
-                { ...formControls.emailAddress }
-                handleChange={onControlChange}
-                handleBlur={onControlBlur}
-            />
+                    />
 
-            <Input
-                element={formControls.password.elementConfigs.element}
-                type={formControls.password.elementConfigs.type}
-                autoComplete={formControls.password.elementConfigs.autoComplete}
-                { ...formControls.password }
-                handleChange={onControlChange}
-                handleBlur={onControlBlur}
-            />
-            <Button type="submit" disabled={!isFormValid()}>{ state.isLoginMode ? 'LOGIN' : 'SIGN UP'}</Button>
-           </form>
-           <Button inverse onClick={switchAuthModeHandler}>{state.isLoginMode ? 'SWITCH TO SIGN UP' : 'SWITCH TO LOGIN'}</Button>
-       </Card>
+                    <Input
+                        element={formControls.password.elementConfigs.element}
+                        type={formControls.password.elementConfigs.type}
+                        autoComplete={formControls.password.elementConfigs.autoComplete}
+                        { ...formControls.password }
+                        handleChange={onControlChange}
+                        handleBlur={onControlBlur}
+                    />
+                    <Button type="submit" disabled={!isFormValid()}>{ state.isLoginMode ? 'LOGIN' : 'SIGN UP'}</Button>
+                </form>
+                <Button inverse onClick={switchAuthModeHandler}>{state.isLoginMode ? 'SWITCH TO SIGN UP' : 'SWITCH TO LOGIN'}</Button>
+            </Card>
+        </React.Fragment>
     );
 };
 

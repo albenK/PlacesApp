@@ -1,7 +1,6 @@
 export const AuthInitialState = {
     isLoginMode: true,
     isLoading: false,
-    data: null,
     error: null
 };
 
@@ -21,12 +20,12 @@ export const AuthReducer = (state, action) => {
         case ACTION_TYPES.SET_LOADING:
             return {
                 ...state,
-                isLoading: action.data
+                isLoading: action.payload.isLoading
             };
         case ACTION_TYPES.SET_ERROR:
             return {
                 ...state,
-                error: action.data
+                error: action.payload.error
             };
         default:
             return state;
