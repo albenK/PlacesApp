@@ -34,18 +34,37 @@ const Authenticate = () => {
     const authSubmitHandler = async (event) => {
         event.preventDefault(); // prevent browser from refreshing the page.
         console.log('form state is ', formControls);
-        // if (!isFormValid()) {
-        //     return;
-        // }
+        if (!isFormValid()) {
+            return;
+        }
 
+        dispatch({ type: ACTION_TYPES.SET_LOADING, payload: { isLoading: true } });
         // TODO: Make HTTP request to sign in or sign up. For now fake a login.
         if (state.isLoginMode) {
-            // TODO: implement login
-            console.log('login');
+            try {
+                const response = await fetch('http://localhost:5000/api/users/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: formControls.emailAddress.value,
+                        password: formControls.password.value
+                    })
+                });
+                const responseData = await response.json();
+                console.log('responseData is ', responseData);
+                if (!response.ok) {
+                    throw new Error(responseData.message);
+                }
+                dispatch({ type: ACTION_TYPES.SET_LOADING, payload: { isLoading: false } });
+                auth.login();
+            } catch (error) {
+                dispatch({ type: ACTION_TYPES.SET_LOADING, payload: { isLoading: false } });
+                console.log('WE HAVE AN ERROR! ', error);
+                dispatch({ type: ACTION_TYPES.SET_ERROR, payload: { error: error.message ||  'Something went wrong. Please try again later.' } });
+            } 
         } else {
             // Sign Up
             try {
-                dispatch({ type: ACTION_TYPES.SET_LOADING, payload: { isLoading: true } });
                 const response = await fetch('http://localhost:5000/api/users/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
