@@ -2,7 +2,7 @@ import React from 'react';
 
 import Button from '../../../shared/components/FormElements/Button/Button';
 import Input from '../../../shared/components/FormElements/Input/Input';
-import useForm from '../../../shared/hooks/useForm';
+import useForm from '../../../shared/hooks/useForm/useForm';
 
 import './NewPlace.css';
 import { New_Place_Form_Config } from './NewPlaceFormConfig';

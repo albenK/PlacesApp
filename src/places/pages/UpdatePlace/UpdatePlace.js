@@ -6,7 +6,7 @@ import Button from '../../../shared/components/FormElements/Button/Button';
 import './UpdatePlace.css';
 
 import { DUMMY_PLACES } from '../UserPlaces/UserPlaces';
-import useForm from '../../../shared/hooks/useForm';
+import useForm from '../../../shared/hooks/useForm/useForm';
 import { UPDATE_PLACE_FORM_CONFIG } from './UpdatePlaceFormConfig';
 import Input from '../../../shared/components/FormElements/Input/Input';
 
