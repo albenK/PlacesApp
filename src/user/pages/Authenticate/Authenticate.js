@@ -11,11 +11,11 @@ import { AuthContext } from '../../../shared/context/AuthContext';
 
 import './Authenticate.css';
 import { SIGN_IN_FORM_CONFIG,  NAME_CONTROL_CONFIG } from './AuthenticateFormConfig';
-import { AuthInitialState, ACTION_TYPES, AuthReducer } from './AuthReducer';
+import { AUTH_INITIAL_STATE, AUTH_ACTION_TYPES, AUTH_REDUCER } from './AuthReducer';
 
 const Authenticate = () => {
     const auth = useContext(AuthContext);
-    const [ state, dispatch ] = useReducer(AuthReducer, AuthInitialState);
+    const [ state, dispatch ] = useReducer(AUTH_REDUCER, AUTH_INITIAL_STATE);
     const { getFormControls, isFormValid, addControls, removeControls, onControlChange, onControlBlur } = useForm(SIGN_IN_FORM_CONFIG);
     const formControls = getFormControls();
     
@@ -28,7 +28,7 @@ const Authenticate = () => {
         else { // else we're about to be in sign up mode, so add the name control.
             addControls([NAME_CONTROL_CONFIG]);
         }
-        dispatch({ type: ACTION_TYPES.TOGGLE_LOGIN_MODE });
+        dispatch({ type: AUTH_ACTION_TYPES.TOGGLE_LOGIN_MODE });
     };
 
     const authSubmitHandler = async (event) => {
@@ -38,7 +38,7 @@ const Authenticate = () => {
             return;
         }
 
-        dispatch({ type: ACTION_TYPES.SET_LOADING, payload: { isLoading: true } });
+        dispatch({ type: AUTH_ACTION_TYPES.SET_LOADING, payload: { isLoading: true } });
         // TODO: Make HTTP request to sign in or sign up. For now fake a login.
         if (state.isLoginMode) {
             try {
@@ -55,12 +55,11 @@ const Authenticate = () => {
                 if (!response.ok) {
                     throw new Error(responseData.message);
                 }
-                dispatch({ type: ACTION_TYPES.SET_LOADING, payload: { isLoading: false } });
+                dispatch({ type: AUTH_ACTION_TYPES.SET_LOADING, payload: { isLoading: false } });
                 auth.login();
             } catch (error) {
-                dispatch({ type: ACTION_TYPES.SET_LOADING, payload: { isLoading: false } });
-                console.log('WE HAVE AN ERROR! ', error);
-                dispatch({ type: ACTION_TYPES.SET_ERROR, payload: { error: error.message ||  'Something went wrong. Please try again later.' } });
+                dispatch({ type: AUTH_ACTION_TYPES.SET_LOADING, payload: { isLoading: false } });
+                dispatch({ type: AUTH_ACTION_TYPES.SET_ERROR, payload: { error: error.message ||  'Something went wrong. Please try again later.' } });
             } 
         } else {
             // Sign Up
@@ -79,18 +78,17 @@ const Authenticate = () => {
                 if (!response.ok) {
                     throw new Error(responseData.message);
                 }
-                dispatch({ type: ACTION_TYPES.SET_LOADING, payload: { isLoading: false } });
+                dispatch({ type: AUTH_ACTION_TYPES.SET_LOADING, payload: { isLoading: false } });
                 auth.login();
             } catch (error) {
-                dispatch({ type: ACTION_TYPES.SET_LOADING, payload: { isLoading: false } });
-                console.log('WE HAVE AN ERROR! ', error);
-                dispatch({ type: ACTION_TYPES.SET_ERROR, payload: { error: error.message ||  'Something went wrong. Please try again later.' } });
+                dispatch({ type: AUTH_ACTION_TYPES.SET_LOADING, payload: { isLoading: false } });
+                dispatch({ type: AUTH_ACTION_TYPES.SET_ERROR, payload: { error: error.message ||  'Something went wrong. Please try again later.' } });
             }   
         }
     };
 
     const errorModalCloseHandler = () => {
-        dispatch({ type: ACTION_TYPES.SET_ERROR, payload: { error: null } });
+        dispatch({ type: AUTH_ACTION_TYPES.SET_ERROR, payload: { error: null } });
     };
 
     return (
