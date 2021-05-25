@@ -39,7 +39,6 @@ const Authenticate = () => {
             return;
         }
 
-       
         // TODO: Make HTTP request to sign in or sign up. For now fake a login.
         if (isLoginMode) {
             try {
@@ -54,7 +53,7 @@ const Authenticate = () => {
                     }
                 );
                 console.log('responseData is ', responseData);
-                auth.login();
+                auth.login(responseData.user.id);
             } catch (error) {}
         } else {
             // Sign Up
@@ -71,7 +70,7 @@ const Authenticate = () => {
                     }
                 );
                 console.log('responseData is ', responseData);
-                auth.login();
+                auth.login(responseData.user.id);
             } catch (error) {}   
         }
     };
