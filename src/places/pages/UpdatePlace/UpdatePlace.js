@@ -1,38 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Card from '../../../shared/components/UIElements/Card/Card';
-import Button from '../../../shared/components/FormElements/Button/Button';
 
+import Card from '../../../shared/components/UIElements/Card/Card';
+import Input from '../../../shared/components/FormElements/Input/Input';
+import Button from '../../../shared/components/FormElements/Button/Button';
+import LoadingSpinner from '../../../shared/components/UIElements/LoadingSpinner/LoadingSpinner';
+import ErrorModal from '../../../shared/components/UIElements/Modal/ErrorModal/ErrorModal';
+
+import useForm from '../../../shared/hooks/useForm/useForm';
+import useHttpClient from '../../../shared/hooks/useHttpClient/useHttpClient'
+;
 import './UpdatePlace.css';
 
 import { DUMMY_PLACES } from '../UserPlaces/UserPlaces';
-import useForm from '../../../shared/hooks/useForm/useForm';
 import { UPDATE_PLACE_FORM_CONFIG } from './UpdatePlaceFormConfig';
-import Input from '../../../shared/components/FormElements/Input/Input';
+
 
 const UpdatePlace = () => {
     const placeId = useParams().placeId;
-    const [place, setPlace] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
     const { getFormControls, isFormValid, onControlChange, onControlBlur, updateControls } = useForm(UPDATE_PLACE_FORM_CONFIG);
+    const formControls = getFormControls();
+    const [place, setPlace] = useState(null);
 
     useEffect(() => {
         // TODO: Make http request to backend to retrieve place.
         // Since there's no backend, retrieve from DUMMY_PLACES array.
         // Mimic waiting for http request with setTimeout();
-        const timeout = setTimeout(() => {
-            const placeToUpdate = DUMMY_PLACES.find(p => p.id === placeId) || null;
-            console.log('placeId changed and it\'s value is ', placeId, '. The place is ', placeToUpdate);
-            setPlace(placeToUpdate);
-            setIsLoading(false);
-        }, 2000);
 
-        return () => {
-            console.log('timeout is ', timeout);
-            if (typeof timeout === 'number') {
-                clearTimeout(timeout);
-            } 
-        }
+        // const timeout = setTimeout(() => {
+        //     const placeToUpdate = DUMMY_PLACES.find(p => p.id === placeId) || null;
+        //     console.log('placeId changed and it\'s value is ', placeId, '. The place is ', placeToUpdate);
+        //     setPlace(placeToUpdate);
+        // }, 2000);
+        const getPlace = async () => {
+            try {
+                const responseData = await sendRequest(`http://localhost:5000/api/places/${placeId}`);
+                setPlace(responseData.place);
+            } catch (err) {}
+        };
+
+        getPlace();
+
+        // return () => {
+        //     console.log('timeout is ', timeout);
+        //     if (typeof timeout === 'number') {
+        //         clearTimeout(timeout);
+        //     } 
+        // }
         
     }, [placeId]);
 
@@ -55,7 +70,7 @@ const UpdatePlace = () => {
 
     const updatePlace = (event) => {
         event.preventDefault(); // dont refresh the page.
-        console.log('form state is ', getFormControls());
+        console.log('form state is ', formControls);
         if (!isFormValid()) {
             return;
         }
@@ -77,27 +92,26 @@ const UpdatePlace = () => {
             );
         });
     };
-    
-    if (isLoading) {
-        return (
-            <div className="center">
-                <Card>Loading...</Card>
-            </div>
-        );
-    }
-    else if (!isLoading && !place) {
-        return (
-            <div className="center">
-                <Card>Could not find place!</Card>
-            </div>
-        );
-    }
 
     return (
-        <form className="update-place-form" onSubmit={updatePlace}>
-            {renderFormControls()}
-            <Button type="submit" disabled={!isFormValid()}>UPDATE PLACE</Button>
-        </form>
+        <React.Fragment>
+            { isLoading && <LoadingSpinner asOverlay /> }
+            { 
+                !isLoading && !place && ( 
+                    <div className="center">
+                        <Card>Could not find place!</Card>
+                    </div>
+                )
+            }
+            {
+                !isLoading && place && (
+                    <form className="update-place-form" onSubmit={updatePlace}>
+                        { renderFormControls() }
+                        <Button type="submit" disabled={!isFormValid()}>UPDATE PLACE</Button>
+                    </form>
+                )
+            }
+        </React.Fragment>
     );
 };
 
