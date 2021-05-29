@@ -9,27 +9,31 @@ import useHttpClient from '../../../shared/hooks/useHttpClient/useHttpClient';
 import PlaceList from '../../components/PlaceList/PlaceList';
 
 const UserPlaces = (props) => {
-    const [myPlaces, setMyPlaces ] = useState([]);
+    const [ places, setPlaces ] = useState([]);
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
     const urlParams = useParams();
     const userId = urlParams.userId;
 
     useEffect(() => {
-        const getMyPlaces = async () => {
+        const getPlaces = async () => {
             try {
                 const responseData = await sendRequest(`http://localhost:5000/api/places/user/${userId}`);
-                setMyPlaces(responseData.places);
+                setPlaces(responseData.places);
             } catch (err) {}
         };
 
-        getMyPlaces();
+        getPlaces();
     }, [sendRequest, userId]);
+
+    const onPlaceDeleteHandler = (deletedPlaceId) => {
+        setPlaces(previousPlaces => previousPlaces.filter(p => p.id !== deletedPlaceId));
+    };
 
     return (
         <React.Fragment>
             { isLoading && <LoadingSpinner asOverlay /> }
             <ErrorModal error={error} onClear={clearError} />
-            { !isLoading && <PlaceList items={myPlaces}/> }
+            { !isLoading && <PlaceList items={places} onDeletePlace={onPlaceDeleteHandler}/> }
         </React.Fragment>
     );
 };
