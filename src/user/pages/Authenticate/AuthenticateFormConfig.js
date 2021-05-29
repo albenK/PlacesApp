@@ -35,7 +35,7 @@ export const SIGN_IN_FORM_CONFIG = {
         isTouched: false,
         errorMessage: '',
         validationRules: [
-            minLengthRule('Password', 5)
+            minLengthRule('Password', 6)
         ]
     }
 };

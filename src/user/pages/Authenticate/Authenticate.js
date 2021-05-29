@@ -39,7 +39,6 @@ const Authenticate = () => {
             return;
         }
 
-        // TODO: Make HTTP request to sign in or sign up. For now fake a login.
         if (isLoginMode) {
             try {
                 const responseData = await sendRequest('http://localhost:5000/api/users/login',
@@ -52,7 +51,6 @@ const Authenticate = () => {
                         'Content-Type': 'application/json'
                     }
                 );
-                console.log('responseData is ', responseData);
                 auth.login(responseData.user.id);
             } catch (error) {}
         } else {
@@ -69,7 +67,6 @@ const Authenticate = () => {
                         'Content-Type': 'application/json'
                     }
                 );
-                console.log('responseData is ', responseData);
                 auth.login(responseData.user.id);
             } catch (error) {}   
         }
