@@ -19,6 +19,15 @@ const Input = (props) => {
         errorMessage 
     } = props;
 
+    const onInputChange = (event) => {
+        const { value } = event.target;
+        handleChange(name, value);
+    };
+
+    const onInputBlur = (event) => {
+        handleBlur(name);
+    };
+
     const elementToRender = element === 'input' ? (
         <input 
             id={id}
@@ -26,12 +35,12 @@ const Input = (props) => {
             name={name}
             placeholder={placeholder}
             autoComplete={autoComplete}
-            onChange={handleChange}
-            onBlur={handleBlur}
+            onChange={onInputChange}
+            onBlur={onInputBlur}
             value={value}
         />
     ) : (
-        <textarea id={id} rows={props.rows || 3} name={name} autoComplete={autoComplete} onChange={handleChange} onBlur={handleBlur} value={value}/>
+        <textarea id={id} rows={props.rows || 3} name={name} autoComplete={autoComplete} onChange={onInputChange} onBlur={onInputBlur} value={value}/>
     );
 
     return (

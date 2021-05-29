@@ -5,13 +5,14 @@ import Input from '../../../shared/components/FormElements/Input/Input';
 import Card from '../../../shared/components/UIElements/Card/Card';
 import LoadingSpinner from '../../../shared/components/UIElements/LoadingSpinner/LoadingSpinner';
 import ErrorModal from '../../../shared/components/UIElements/Modal/ErrorModal/ErrorModal';
+import ImageUpload from '../../../shared/components/FormElements/ImageUpload/ImageUpload';
 
 import useForm from '../../../shared/hooks/useForm/useForm';
 import useHttpClient from '../../../shared/hooks/useHttpClient/useHttpClient';
 import { AuthContext } from '../../../shared/context/AuthContext';
 
 import './Authenticate.css';
-import { SIGN_IN_FORM_CONFIG,  NAME_CONTROL_CONFIG } from './AuthenticateFormConfig';
+import { SIGN_IN_FORM_CONFIG,  NAME_CONTROL_CONFIG, IMAGE_CONTROL_CONFIG } from './AuthenticateFormConfig';
 
 const Authenticate = () => {
     const auth = useContext(AuthContext);
@@ -22,12 +23,12 @@ const Authenticate = () => {
     
     const switchAuthModeHandler = () => {
         const isLogin = !isLoginMode;
-        // if we're about to be in login mode, remove the name control
+        // if we're about to be in login mode, remove the name and image control's.
         if (isLogin) {
-            removeControls(['name']);
+            removeControls([NAME_CONTROL_CONFIG.name, IMAGE_CONTROL_CONFIG.name]);
         }
-        else { // else we're about to be in sign up mode, so add the name control.
-            addControls([NAME_CONTROL_CONFIG]);
+        else { // else we're about to be in sign up mode, so add the name and image control's.
+            addControls([NAME_CONTROL_CONFIG, IMAGE_CONTROL_CONFIG]);
         }
         setIsLoginMode(prevValue => !prevValue);
     };
@@ -93,6 +94,22 @@ const Authenticate = () => {
                             /> 
                         ) : null
                     }
+
+                    {
+                        formControls.profileImage ? (
+                            <ImageUpload
+                                id={formControls.profileImage.id}
+                                name={formControls.profileImage.name}
+                                accept={formControls.profileImage.elementConfigs.accept}
+                                center
+                                isTouched={formControls.profileImage.isTouched}
+                                isValid={formControls.profileImage.isValid}
+                                errorMessage={formControls.profileImage.errorMessage}
+                                onInput={onControlChange}
+                            />
+                        ) : null
+                    }
+
                     <Input
                         element={formControls.emailAddress.elementConfigs.element}
                         type={formControls.emailAddress.elementConfigs.type}
@@ -110,6 +127,7 @@ const Authenticate = () => {
                         handleChange={onControlChange}
                         handleBlur={onControlBlur}
                     />
+
                     <Button type="submit" disabled={!isFormValid()}>{ isLoginMode ? 'LOGIN' : 'SIGN UP'}</Button>
                 </form>
                 <Button inverse onClick={switchAuthModeHandler}>{isLoginMode ? 'SWITCH TO SIGN UP' : 'SWITCH TO LOGIN'}</Button>

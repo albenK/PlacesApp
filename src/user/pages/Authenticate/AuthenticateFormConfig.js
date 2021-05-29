@@ -1,4 +1,4 @@
-import { emailRule, requiredRule, minLengthRule } from '../../../shared/utils/validators';
+import { emailRule, requiredRule, minLengthRule, acceptedFilesRule } from '../../../shared/utils/validators';
 
 export const SIGN_IN_FORM_CONFIG = {
     emailAddress: {
@@ -56,5 +56,21 @@ export const NAME_CONTROL_CONFIG = {
     errorMessage: '',
     validationRules: [
         requiredRule('Your Name')
+    ]
+};
+
+export const IMAGE_CONTROL_CONFIG = {
+    id: 'profileImage',
+    label: '',
+    name: 'profileImage',
+    elementConfigs: {
+        accept: '.jpg,.jpeg,.png'
+    },
+    value: '',
+    isValid: false,
+    isTouched: false,
+    errorMessage: '',
+    validationRules: [
+        acceptedFilesRule('Profile Picture', ['image/png', 'image/jpg', 'image/jpeg'])
     ]
 };

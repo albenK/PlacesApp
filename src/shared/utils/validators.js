@@ -4,7 +4,7 @@ const VALIDAOTR_TYPE_MAXLENGTH = 'MAXLENGTH';
 const VALIDATOR_TYPE_MIN = 'MIN';
 const VALIDATOR_TYPE_MAX = 'MAX';
 const VALIDATOR_TYPE_EMAIL = 'EMAIL';
-const VALIDATOR_TYPE_FILE = 'FILE';
+const VALIDATOR_TYPE_ACCEPTED_FILES = 'ACCEPTED_FILES';
 
 
 
@@ -81,17 +81,23 @@ export const emailRule = (formControlName) => {
     );
 };
 
-export const fileRule = (formControlName, acceptedFileTypes) => {
+export const acceptedFilesRule = (formControlName, acceptedMIMETypes) => {
     return createValidationRule(
-        VALIDATOR_TYPE_FILE,
-        `The uploaded file(s) must be one of ${acceptedFileTypes.join(', ')}`,
+        VALIDATOR_TYPE_ACCEPTED_FILES,
+        `${formControlName} must be one of ${(acceptedMIMETypes || []).join(', ')} file types.`,
         (formControlValue, form) => {
-            /* TODO: Work on this logic!
-            formControlValue could be the FileList, i.e "event.target.files" from 
-            the <input type="file"/> element. acceptedFileTypes could be an array of strings.
-            For example: ['image/png', 'image/jpg',...]
-            */
-            return false; 
+            let isValid = true;
+            const fileList = formControlValue;
+            const mimeTypes = acceptedMIMETypes || [];
+            for (let i = 0; i < fileList.length; i++) {
+                const file = fileList[i];
+                const isValidFile = mimeTypes.some(mimeType => file.type === mimeType);
+                if (!isValidFile) {
+                    isValid = false;
+                    break;
+                }
+            }
+            return isValid; 
         }
     );
 };

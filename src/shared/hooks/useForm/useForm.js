@@ -26,8 +26,7 @@ const useForm = (formObject) => {
         return isValid;
     }, [form]);
 
-    const onControlChange = useCallback((event) => {
-        const { name, value } = event.target;
+    const onControlChange = useCallback((name, value) => {
         console.log('change event happened ', 'value is ', value, '. name is ', name);
         if (!form[name]) { // safety check
             throw new Error(`The ${name} FormControl wasn't found in the form.`);
@@ -52,8 +51,7 @@ const useForm = (formObject) => {
 
     }, [form, getValidityOfFormControl]);
 
-    const onControlBlur = useCallback((event) => {
-        const { name } = event.target;
+    const onControlBlur = useCallback((name) => {
         console.log('blur event happened. name is ', name);
         if (!form[name]) { // safety check
             throw new Error(`The ${name} FormControl wasn't found in the form.`);
