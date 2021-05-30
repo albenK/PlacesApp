@@ -66,7 +66,7 @@ export const IMAGE_CONTROL_CONFIG = {
     elementConfigs: {
         accept: '.jpg,.jpeg,.png'
     },
-    value: '',
+    value: null,
     isValid: false,
     isTouched: false,
     errorMessage: '',

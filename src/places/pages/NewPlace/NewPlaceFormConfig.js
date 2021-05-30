@@ -1,4 +1,4 @@
-import { minLengthRule, requiredRule } from "../../../shared/utils/validators";
+import { minLengthRule, requiredRule, acceptedFilesRule } from "../../../shared/utils/validators";
 
 // object representation of NewPlace form
 export const New_Place_Form_Config = {
@@ -52,6 +52,21 @@ export const New_Place_Form_Config = {
         errorMessage: '',
         validationRules: [
             requiredRule('Address')
+        ]
+    },
+    placeImage: {
+        id: 'placeImage',
+        label: '',
+        name: 'placeImage',
+        elementConfigs: {
+            accept: '.jpg,.jpeg,.png'
+        },
+        value: null,
+        isValid: false,
+        isTouched: false,
+        errorMessage: '',
+        validationRules: [
+            acceptedFilesRule('Place Image', ['image/png', 'image/jpg', 'image/jpeg'])
         ]
     }
 };

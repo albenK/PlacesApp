@@ -13,6 +13,7 @@ import { AuthContext } from '../../../shared/context/AuthContext';
 
 import './NewPlace.css';
 import { New_Place_Form_Config } from './NewPlaceFormConfig';
+import ImageUpload from '../../../shared/components/FormElements/ImageUpload/ImageUpload';
 
 const NewPlace = () => {
     const auth = useContext(AuthContext)
@@ -29,35 +30,19 @@ const NewPlace = () => {
             return;
         }
         try {
+            const formData = new FormData();
+            formData.append('title', formControls.title.value);
+            formData.append('description', formControls.description.value);
+            formData.append('address', formControls.address.value);
+            formData.append('creator', auth.userId);
+            formData.append('image', formControls.placeImage.value[0]); // value is FileList, so value[0] will be the file.
             await sendRequest(
                 'http://localhost:5000/api/places',
                 'POST',
-                JSON.stringify({
-                    title: formControls.title.value,
-                    description: formControls.description.value,
-                    address: formControls.address.value,
-                    creator: auth.userId
-                }),
-                { 'Content-Type': 'application/json' }
+                formData
             );
             history.push('/'); // navigate user to root page.
         } catch (err) {}
-    };
-
-    const renderFormControls = () => {
-        const controls = getFormControls();
-        return Object.values(controls).map(control => {
-            return (
-                <Input
-                    key={control.id}
-                    element={control.elementConfigs.element}
-                    type={control.elementConfigs.type}
-                    {...control}
-                    handleChange={onControlChange}
-                    handleBlur={onControlBlur}
-                />
-            );
-        });
     };
 
     return (
@@ -65,7 +50,42 @@ const NewPlace = () => {
             { isLoading && <LoadingSpinner asOverlay/> }
             <ErrorModal error={error} onClear={clearError} />
             <form className="place-form" onSubmit={addPlace}>
-                {renderFormControls()}
+                <Input
+                    element={formControls.title.elementConfigs.element}
+                    type={formControls.title.elementConfigs.type}
+                    autoComplete={formControls.title.elementConfigs.autoComplete}
+                    { ...formControls.title }
+                    handleChange={onControlChange}
+                    handleBlur={onControlBlur}
+                />
+
+                <Input
+                    element={formControls.description.elementConfigs.element}
+                    type={formControls.description.elementConfigs.type}
+                    autoComplete={formControls.description.elementConfigs.autoComplete}
+                    { ...formControls.description }
+                    handleChange={onControlChange}
+                    handleBlur={onControlBlur}
+                />
+
+                <Input
+                    element={formControls.address.elementConfigs.element}
+                    type={formControls.address.elementConfigs.type}
+                    autoComplete={formControls.address.elementConfigs.autoComplete}
+                    { ...formControls.address }
+                    handleChange={onControlChange}
+                    handleBlur={onControlBlur}
+                />
+
+                <ImageUpload
+                    id={formControls.placeImage.id}
+                    name={formControls.placeImage.name}
+                    accept={formControls.placeImage.elementConfigs.accept}
+                    isValid={formControls.placeImage.isValid}
+                    isTouched={formControls.placeImage.isTouched}
+                    errorMessage={formControls.placeImage.errorMessage}
+                    onInput={onControlChange}
+                />
                 <Button type="submit" disabled={!isFormValid()}>ADD PLACE</Button>
             </form>
         </React.Fragment>

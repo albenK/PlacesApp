@@ -11,7 +11,7 @@ const ImageUpload = (props) => {
 
     /* Register an effect to run when files changes. Used to display preview image.*/
     useEffect(() => {
-        if (!files) {
+        if (!files || !files[0]) {
             return;
         }
         const fileReader = new FileReader();

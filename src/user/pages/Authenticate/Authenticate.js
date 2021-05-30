@@ -57,16 +57,14 @@ const Authenticate = () => {
         } else {
             // Sign Up
             try {
+                const formData = new FormData();
+                formData.append('name', formControls.name.value);
+                formData.append('email', formControls.emailAddress.value);
+                formData.append('password', formControls.password.value);
+                formData.append('image', formControls.profileImage.value[0]); // value is FileList, so value[0] will be the file.
                 const responseData = await sendRequest('http://localhost:5000/api/users/signup',
                     'POST',
-                    JSON.stringify({
-                        name: formControls.name.value,
-                        email: formControls.emailAddress.value,
-                        password: formControls.password.value
-                    }),
-                    {
-                        'Content-Type': 'application/json'
-                    }
+                    formData
                 );
                 auth.login(responseData.user.id);
             } catch (error) {}   

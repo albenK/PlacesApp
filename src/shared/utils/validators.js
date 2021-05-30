@@ -86,9 +86,10 @@ export const acceptedFilesRule = (formControlName, acceptedMIMETypes) => {
         VALIDATOR_TYPE_ACCEPTED_FILES,
         `${formControlName} must be one of ${(acceptedMIMETypes || []).join(', ')} file types.`,
         (formControlValue, form) => {
-            let isValid = true;
-            const fileList = formControlValue;
             const mimeTypes = acceptedMIMETypes || [];
+            const fileList = formControlValue || [];
+            let isValid = !!fileList && !!fileList.length;
+
             for (let i = 0; i < fileList.length; i++) {
                 const file = fileList[i];
                 const isValidFile = mimeTypes.some(mimeType => file.type === mimeType);
