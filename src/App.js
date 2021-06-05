@@ -11,22 +11,23 @@ import { AuthContext } from './shared/context/AuthContext';
 
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState(null);
   const [userId, setUserId] = useState(null);
 
-  const login = useCallback((id) => {
+  const login = useCallback((id, token) => {
+    setToken(token);
     setUserId(id);
-    setIsLoggedIn(true);
+    localStorage.setItem('userData', JSON.stringify({ userId: id, token: token }));
   }, []);
 
   const logout = useCallback(() => {
     setUserId(null);
-    setIsLoggedIn(false);
+    setToken(null);
   }, []);
 
   /* Have different routes available based on auth state.*/
   let routes;
-  if (isLoggedIn) {
+  if (token) {
     routes = (
       <Switch>
         <Route path="/" exact>
@@ -62,7 +63,7 @@ const App = () => {
   }
 
   return (
-    <AuthContext.Provider value={{isLoggedIn: isLoggedIn, userId: userId, login: login, logout: logout}}>
+    <AuthContext.Provider value={{isLoggedIn: !!token, token: token, userId: userId, login: login, logout: logout}}>
       <Router>
         <MainNavigation/>
         <main>
