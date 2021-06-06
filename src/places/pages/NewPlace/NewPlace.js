@@ -34,7 +34,6 @@ const NewPlace = () => {
             formData.append('title', formControls.title.value);
             formData.append('description', formControls.description.value);
             formData.append('address', formControls.address.value);
-            formData.append('creator', auth.userId);
             formData.append('image', formControls.placeImage.value[0]); // value is FileList, so value[0] will be the file.
             await sendRequest(
                 'http://localhost:5000/api/places',
