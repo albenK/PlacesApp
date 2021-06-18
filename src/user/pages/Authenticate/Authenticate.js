@@ -42,7 +42,7 @@ const Authenticate = () => {
 
         if (isLoginMode) {
             try {
-                const responseData = await sendRequest('http://localhost:5000/api/users/login',
+                const responseData = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/users/login`,
                     'POST',
                     JSON.stringify({
                         email: formControls.emailAddress.value,
@@ -62,7 +62,7 @@ const Authenticate = () => {
                 formData.append('email', formControls.emailAddress.value);
                 formData.append('password', formControls.password.value);
                 formData.append('image', formControls.profileImage.value[0]); // value is FileList, so value[0] will be the file.
-                const responseData = await sendRequest('http://localhost:5000/api/users/signup',
+                const responseData = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/users/signup`,
                     'POST',
                     formData
                 );

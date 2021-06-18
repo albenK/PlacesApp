@@ -36,7 +36,7 @@ const NewPlace = () => {
             formData.append('address', formControls.address.value);
             formData.append('image', formControls.placeImage.value[0]); // value is FileList, so value[0] will be the file.
             await sendRequest(
-                'http://localhost:5000/api/places',
+                `${process.env.REACT_APP_BACKEND_URL}/places`,
                 'POST',
                 formData,
                 { Authorization: 'Bearer ' + auth.token }
