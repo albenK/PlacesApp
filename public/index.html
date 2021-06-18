@@ -24,12 +24,13 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQRlz3-TkBTz3uGlQJyYr21y64-Xuqxr4"
-    async defer></script>
+    <title>Places App</title>
+    <link href="https://leafletjs-cdn.s3.amazonaws.com/content/leaflet/master/leaflet.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script type="text/javascript" src="https://leafletjs-cdn.s3.amazonaws.com/content/leaflet/master/leaflet.js"></script>
+    <script type="text/javascript" src='https://tiles.locationiq.com/v3/js/liq-styles-ctrl-leaflet.js?v=0.1.8'></script>
     <div id="backdrop-hook"></div>
     <div id="modal-hook"></div>
     <div id="drawer-hook"></div>

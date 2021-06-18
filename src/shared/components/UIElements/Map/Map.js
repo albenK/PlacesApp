@@ -25,18 +25,33 @@ const Map = (props) => {
     (when a component mounts for the first time) will ALWAYS happen AFTER the component rendered for the first time.
     */
     useEffect(() => {
-        // console.log('useEffect callback running');
-        const googleMap = new window.google.maps.Map(mapReference.current, {
-            center: center,
-            zoom: zoom
+        const API_KEY = process.env.REACT_APP_LOCATION_IQ_API_KEY;
+
+        // Add layers that we need to the map
+        const streets =  window.L.tileLayer.Unwired({key: API_KEY, scheme: "streets"});
+
+        // Initialize the map
+        const mapId = mapReference.current.id;
+        const map = window.L.map(mapId, {
+            center: [ center.lat, center.lng ], // map loads with this location as center
+            zoom: zoom,
+            layers: [streets] // Show 'streets' by default
         });
-    
-        new window.google.maps.Marker({position: center, map: googleMap});
+
+        // Add the 'scale' control
+        window.L.control.scale().addTo(map);
+        // Add the 'layers' control
+        window.L.control.layers({
+            "Streets": streets
+        }).addTo(map);
+
+        // Add marker
+        window.L.marker([ center.lat, center.lng ]).addTo(map);
+
     }, [center, zoom]);
-    // console.log('after useEffect callback');
 
     return (
-        <div ref={mapReference} className={`map ${props.className}`} style={props.style}>
+        <div ref={mapReference} id="map" className={`map ${props.className}`} style={props.style}>
 
         </div>
     );
