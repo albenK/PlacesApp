@@ -27,7 +27,6 @@ const useForm = (formObject) => {
     }, [form]);
 
     const onControlChange = useCallback((name, value) => {
-        console.log('change event happened ', 'value is ', value, '. name is ', name);
         if (!form[name]) { // safety check
             throw new Error(`The ${name} FormControl wasn't found in the form.`);
         }
@@ -52,7 +51,6 @@ const useForm = (formObject) => {
     }, [form, getValidityOfFormControl]);
 
     const onControlBlur = useCallback((name) => {
-        console.log('blur event happened. name is ', name);
         if (!form[name]) { // safety check
             throw new Error(`The ${name} FormControl wasn't found in the form.`);
         }
@@ -71,8 +69,6 @@ const useForm = (formObject) => {
             // If the formControl is invalid and it was previously valid.
             formControl.isValid = false;
         }
-        console.log('form is ', form);
-        console.log('formControl is ', formControl);
         setForm({ ...form, [name]: formControl });
     }, [form, getValidityOfFormControl]);
 
@@ -90,7 +86,6 @@ const useForm = (formObject) => {
      should be run. Default value is false.
      */
     const updateControls = useCallback((controlsToUpdate, shouldRunValidationRules = false) => {
-        console.log('calling updateControls');
         if (!controlsToUpdate || !Array.isArray(controlsToUpdate)) {
             throw new Error(`arg ${controlsToUpdate} is not a supported argument`);
         }
@@ -130,7 +125,6 @@ const useForm = (formObject) => {
                 }
             }
         }
-        console.log('newForm is ', newForm);
         setForm({ ...newForm });
     }, [form, getValidityOfFormControl]);
 

@@ -7,7 +7,6 @@ const Map = (props) => {
     Similar to document.getElementById() in vanilla JS.
     */
     const mapReference = useRef(); 
-    // console.log('mapRef is ', mapReference);
     /* object destructuring. Assign value of center and zoom from props
     to variables named center, zoom. Now we can refer to center, zoom
     instead of props.center, or props.zoom */

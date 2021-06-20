@@ -35,7 +35,6 @@ const Authenticate = () => {
 
     const authSubmitHandler = async (event) => {
         event.preventDefault(); // prevent browser from refreshing the page.
-        console.log('form state is ', formControls);
         if (!isFormValid()) {
             return;
         }

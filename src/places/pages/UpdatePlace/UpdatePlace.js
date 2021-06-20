@@ -36,7 +36,6 @@ const UpdatePlace = () => {
     }, [sendRequest, placeId]);
 
     useEffect(() => {
-        console.log('The value of place has changed.', place);
         if (!place) { return; }
         // update the values of title and description form controls to prefill them
         updateControls(
@@ -56,7 +55,7 @@ const UpdatePlace = () => {
 
     const updatePlace = async (event) => {
         event.preventDefault(); // dont refresh the page.
-        console.log('form state is ', formControls);
+
         if (!isFormValid()) {
             return;
         }
